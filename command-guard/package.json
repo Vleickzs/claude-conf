@@ -1,0 +1,8 @@
+{
+  "name": "claude-command-guard",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "bun test"
+  }
+}

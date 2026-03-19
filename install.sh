@@ -31,16 +31,18 @@ show_banner() {
 
 # ── Module definitions ────────────────────────────────────────────
 
-MODULES=("tab-titles" "handoff-kit" "supervisor")
+MODULES=("tab-titles" "handoff-kit" "supervisor" "command-guard")
 DESCRIPTIONS=(
     "Smart terminal tab titles for Claude Code sessions"
     "Context monitoring, automatic backups, and session handoff"
     "CTO mode — investigate, delegate to workers, validate, never write code"
+    "PreToolUse hook that validates every shell command before execution"
 )
 DEPS=(
     "jq"
     "bun, jq"
     "none"
+    "bun, jq"
 )
 
 # ── Helpers ───────────────────────────────────────────────────────

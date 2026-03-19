@@ -37,6 +37,7 @@
 | [**tab-titles**](tab-titles/) | Smart terminal tab titles that reflect session mode and project | ![Ready](https://img.shields.io/badge/status-ready-brightgreen?style=flat-square) |
 | [**handoff-kit**](handoff-kit/) | Context monitoring, automatic backups, and structured session handoff | ![Ready](https://img.shields.io/badge/status-ready-brightgreen?style=flat-square) |
 | [**supervisor**](supervisor/) | CTO mode — investigate, delegate to workers, validate, never write code | ![Ready](https://img.shields.io/badge/status-ready-brightgreen?style=flat-square) |
+| [**command-guard**](command-guard/) | PreToolUse hook that validates every shell command before execution | ![Ready](https://img.shields.io/badge/status-ready-brightgreen?style=flat-square) |
 
 Each module works **standalone** or as part of this collection. Install only what you need.
 
@@ -98,13 +99,21 @@ Turns Claude Code into a strict CTO that never writes code. It investigates prob
 
 [Full documentation >>>](supervisor/)
 
+### command-guard
+
+A security layer that intercepts every Bash command before Claude Code executes it. Three-tier validation: **DENY** (hard block, even with `--dangerously-skip-permissions`), **ASK** (requires confirmation), **ALLOW** (pass through). Catches `rm -rf` in all its forms, flags dangerous commands like `sudo`, `chmod`, `kill`, and logs every security event.
+
+**Components:** PreToolUse hook (TypeScript/Bun).
+
+[Full documentation >>>](command-guard/)
+
 ## Requirements
 
 | Dependency | Required by | Install |
 |------------|-------------|---------|
 | [Claude Code](https://docs.anthropic.com/en/docs/claude-code) | All modules | `npm install -g @anthropic-ai/claude-code` |
 | [jq](https://jqlang.github.io/jq/) | All modules | `brew install jq` |
-| [Bun](https://bun.sh) | handoff-kit | `curl -fsSL https://bun.sh/install \| bash` |
+| [Bun](https://bun.sh) | handoff-kit, command-guard | `curl -fsSL https://bun.sh/install \| bash` |
 | zsh | tab-titles | Default on macOS |
 
 ## Contributing
@@ -154,6 +163,7 @@ module-name/
 | [**tab-titles**](tab-titles/) | Titres d'onglets intelligents qui refletent le mode de session et le projet | ![Pret](https://img.shields.io/badge/statut-pret-brightgreen?style=flat-square) |
 | [**handoff-kit**](handoff-kit/) | Surveillance du contexte, sauvegardes automatiques et handoff structure | ![Pret](https://img.shields.io/badge/statut-pret-brightgreen?style=flat-square) |
 | [**supervisor**](supervisor/) | Mode CTO — investiguer, deleguer aux workers, valider, jamais ecrire de code | ![Pret](https://img.shields.io/badge/statut-pret-brightgreen?style=flat-square) |
+| [**command-guard**](command-guard/) | Hook PreToolUse qui valide chaque commande shell avant execution | ![Pret](https://img.shields.io/badge/statut-pret-brightgreen?style=flat-square) |
 
 Chaque module fonctionne **de maniere autonome** ou au sein de cette collection. Installez uniquement ce dont vous avez besoin.
 
@@ -188,7 +198,7 @@ bash install.sh
 |------------|------------|--------------|
 | [Claude Code](https://docs.anthropic.com/en/docs/claude-code) | Tous les modules | `npm install -g @anthropic-ai/claude-code` |
 | [jq](https://jqlang.github.io/jq/) | Tous les modules | `brew install jq` |
-| [Bun](https://bun.sh) | handoff-kit | `curl -fsSL https://bun.sh/install \| bash` |
+| [Bun](https://bun.sh) | handoff-kit, command-guard | `curl -fsSL https://bun.sh/install \| bash` |
 | zsh | tab-titles | Par defaut sur macOS |
 
 ## Contribuer
