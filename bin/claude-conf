@@ -232,6 +232,91 @@ cmd_install() {
     echo -e "${GREEN}${mod} installed and tracked.${NC}"
 }
 
+cmd_sync() {
+    echo -e "${BLUE}${BOLD}claude-conf sync${NC}"
+    echo ""
+
+    # Map: module → list of (repo_path, local_path) pairs
+    local desync=0
+    local checked=0
+
+    for mod in $(installed_modules); do
+        local mod_dir="$CONF_DIR/$mod"
+        [ ! -d "$mod_dir" ] && continue
+
+        # Find all installable files and their local destinations
+        case "$mod" in
+            tab-titles)
+                _sync_file "$mod" "hooks/tab-title.sh" "$HOME/.claude/hooks/tab-title.sh"
+                ;;
+            handoff-kit)
+                _sync_file "$mod" "hooks/context-monitor.sh" "$HOME/.claude/hooks/context-monitor.sh"
+                _sync_file "$mod" "hooks/pre-compact-handoff.sh" "$HOME/.claude/hooks/pre-compact-handoff.sh"
+                _sync_file "$mod" "commands/handoff.md" "$HOME/.claude/commands/handoff.md"
+                ;;
+            supervisor)
+                _sync_file "$mod" "commands/supervisor.md" "$HOME/.claude/commands/supervisor.md"
+                ;;
+            command-guard)
+                _sync_file "$mod" "src/cli.ts" "$HOME/.claude/scripts/command-guard/src/cli.ts"
+                _sync_file "$mod" "src/lib/validator.ts" "$HOME/.claude/scripts/command-guard/src/lib/validator.ts"
+                _sync_file "$mod" "src/lib/types.ts" "$HOME/.claude/scripts/command-guard/src/lib/types.ts"
+                ;;
+        esac
+    done
+
+    if [ "$SYNC_DESYNC" -eq 0 ]; then
+        echo -e "${GREEN}All installed modules are in sync.${NC}"
+    else
+        echo ""
+        echo -e "${YELLOW}${SYNC_DESYNC} file(s) out of sync.${NC}"
+        echo -e "${DIM}Run 'claude-conf sync --fix' to copy repo → local${NC}"
+        echo -e "${DIM}Or manually update the repo to match your local changes.${NC}"
+    fi
+}
+
+SYNC_DESYNC=0
+
+_sync_file() {
+    local mod="$1"
+    local repo_rel="$2"
+    local local_path="$3"
+    local repo_path="$CONF_DIR/$mod/$repo_rel"
+
+    if [ ! -f "$repo_path" ]; then
+        return 0
+    fi
+
+    if [ ! -f "$local_path" ]; then
+        echo -e "  ${RED}MISSING${NC} ${mod}/${repo_rel}"
+        echo -e "    ${DIM}Not installed locally: ${local_path}${NC}"
+        SYNC_DESYNC=$((SYNC_DESYNC + 1))
+        return 0
+    fi
+
+    if ! diff -q "$repo_path" "$local_path" &>/dev/null; then
+        echo -e "  ${YELLOW}DESYNC${NC}  ${mod}/${repo_rel}"
+        echo -e "    ${DIM}repo:  ${repo_path}${NC}"
+        echo -e "    ${DIM}local: ${local_path}${NC}"
+
+        if [ "$FIX_MODE" = "1" ]; then
+            cp "$repo_path" "$local_path"
+            echo -e "    ${GREEN}→ Fixed (repo → local)${NC}"
+        else
+            # Show brief diff summary
+            local lines=$(diff "$repo_path" "$local_path" | grep -c '^[<>]' 2>/dev/null || echo "?")
+            echo -e "    ${DIM}${lines} line(s) differ${NC}"
+        fi
+
+        SYNC_DESYNC=$((SYNC_DESYNC + 1))
+    fi
+}
+
+cmd_sync_fix() {
+    FIX_MODE=1
+    cmd_sync
+}
+
 cmd_help() {
     echo -e "${BOLD}claude-conf${NC} — Manage your Claude Code configuration"
     echo ""
@@ -239,6 +324,8 @@ cmd_help() {
     echo "  update              Check and apply updates"
     echo "  status              Show installed/available modules"
     echo "  install <module>    Install a specific module"
+    echo "  sync                Check local files match repo"
+    echo "  sync --fix          Fix desyncs (repo → local)"
     echo "  check               Quick update check (used internally)"
     echo "  help                Show this help"
     echo ""
@@ -248,10 +335,17 @@ cmd_help() {
 # ── Main ──────────────────────────────────────────────────────────
 
 case "${1:-help}" in
-    update)  cmd_update ;;
-    status)  cmd_status ;;
-    install) cmd_install "$2" ;;
-    check)   cmd_check ;;
-    help)    cmd_help ;;
-    *)       echo -e "${RED}Unknown command: $1${NC}"; cmd_help; exit 1 ;;
+    update)     cmd_update ;;
+    status)     cmd_status ;;
+    install)    cmd_install "$2" ;;
+    sync)
+        if [ "$2" = "--fix" ]; then
+            cmd_sync_fix
+        else
+            cmd_sync
+        fi
+        ;;
+    check)      cmd_check ;;
+    help)       cmd_help ;;
+    *)          echo -e "${RED}Unknown command: $1${NC}"; cmd_help; exit 1 ;;
 esac
