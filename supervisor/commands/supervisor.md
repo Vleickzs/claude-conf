@@ -104,6 +104,8 @@ This is your core competency. Each worker prompt MUST contain:
    (unless it blocks your work). The supervisor will decide.
 10. **Single hypothesis** — formulate ONE hypothesis, verify it. Not 5 parallel
     attempts hoping one sticks.
+11. **Boy scout rule for tests** — if a file you touch has no tests, write them.
+    Coverage grows progressively with every ticket. No excuses.
 ```
 
 #### Stack-specific block (adapts to the project)
