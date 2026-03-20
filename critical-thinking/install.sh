@@ -20,6 +20,14 @@ SUPERVISOR_LOCAL="$CLAUDE_DIR/commands/supervisor.md"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SNIPPET_FILE="$SCRIPT_DIR/claude-md/critical-thinking.md"
 
+sed_inplace() {
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        sed -i '' "$@"
+    else
+        sed -i "$@"
+    fi
+}
+
 echo ""
 echo -e "${BOLD}  ┌─────────────────────────────────────────┐${NC}"
 echo -e "${BOLD}  │     ${RED}critical-thinking${NC}${BOLD} for Claude Code    │${NC}"
@@ -54,7 +62,15 @@ if [ ! -f "$CLAUDE_MD" ]; then
     cp "$SNIPPET_FILE" "$CLAUDE_MD"
     echo -e "${GREEN}  ✓${NC} Created $CLAUDE_MD with critical-thinking rules"
 elif grep -q '<!-- critical-thinking:start -->' "$CLAUDE_MD"; then
-    echo -e "${YELLOW}  ! SKIP${NC} — critical-thinking markers already present in CLAUDE.md"
+    # Update: remove old content between markers, reinject fresh
+    sed_inplace '/<!-- critical-thinking:start -->/,/<!-- critical-thinking:end -->/d' "$CLAUDE_MD"
+    # Remove trailing empty lines left by deletion
+    while [[ -s "$CLAUDE_MD" ]] && [[ "$(tail -c 1 "$CLAUDE_MD")" == "" ]] && [[ "$(tail -n 1 "$CLAUDE_MD")" == "" ]]; do
+        sed_inplace '$ d' "$CLAUDE_MD"
+    done
+    echo "" >> "$CLAUDE_MD"
+    cat "$SNIPPET_FILE" >> "$CLAUDE_MD"
+    echo -e "${BLUE}  ↑ UPDATED${NC} critical-thinking rules in CLAUDE.md"
 else
     echo "" >> "$CLAUDE_MD"
     cat "$SNIPPET_FILE" >> "$CLAUDE_MD"
@@ -66,7 +82,7 @@ fi
 echo -e "${BLUE}[3/4]${NC} Fixing stagiaire framing..."
 
 if [ -f "$CLAUDE_MD" ] && grep -q 'stagiaire qui reflechit' "$CLAUDE_MD"; then
-    sed -i '' 's/Tu es un stagiaire qui reflechit et code comme un senior\./Tu es un associe technique. Tu as l'\''expertise pour identifier les bonnes solutions ET pour challenger les mauvaises. L'\''utilisateur reste le decisionnaire final, mais tu lui dois ton avis honnete, pas ta complaisance./' "$CLAUDE_MD"
+    sed_inplace 's/Tu es un stagiaire qui reflechit et code comme un senior\./Tu es un associe technique. Tu as l'\''expertise pour identifier les bonnes solutions ET pour challenger les mauvaises. L'\''utilisateur reste le decisionnaire final, mais tu lui dois ton avis honnete, pas ta complaisance./' "$CLAUDE_MD"
     echo -e "${GREEN}  ✓${NC} Replaced stagiaire framing with associate framing"
 else
     echo -e "${YELLOW}  ! WARNING${NC} — Stagiaire framing not found — may already be updated"
@@ -77,30 +93,40 @@ fi
 echo -e "${BLUE}[4/4]${NC} Patching supervisor..."
 
 if [ -f "$SUPERVISOR_LOCAL" ]; then
-    if grep -q '<!-- critical-thinking:start -->' "$SUPERVISOR_LOCAL"; then
-        echo -e "${YELLOW}  ! SKIP${NC} — critical-thinking markers already present in supervisor"
+    REPO_SUPERVISOR="$SCRIPT_DIR/../supervisor/commands/supervisor.md"
+    if [ ! -f "$REPO_SUPERVISOR" ]; then
+        echo -e "${YELLOW}  ! WARNING${NC} — Repo supervisor source not found, skipping patch"
     else
+        local_action="Injected"
+        if grep -q '<!-- critical-thinking:start -->' "$SUPERVISOR_LOCAL"; then
+            # Update: remove old content between markers
+            sed_inplace '/<!-- critical-thinking:start -->/,/<!-- critical-thinking:end -->/d' "$SUPERVISOR_LOCAL"
+            # Remove trailing empty lines
+            while [[ -s "$SUPERVISOR_LOCAL" ]] && [[ "$(tail -c 1 "$SUPERVISOR_LOCAL")" == "" ]] && [[ "$(tail -n 1 "$SUPERVISOR_LOCAL")" == "" ]]; do
+                sed_inplace '$ d' "$SUPERVISOR_LOCAL"
+            done
+            local_action="Updated"
+        fi
         # Extract POSTURE block from repo source
-        REPO_SUPERVISOR="$SCRIPT_DIR/../supervisor/commands/supervisor.md"
-        if [ -f "$REPO_SUPERVISOR" ]; then
-            POSTURE_FILE=$(mktemp)
-            sed -n '/<!-- critical-thinking:start -->/,/<!-- critical-thinking:end -->/p' "$REPO_SUPERVISOR" > "$POSTURE_FILE"
-            # Insert posture block + separator before ## YOUR ROLE
-            TEMP_FILE=$(mktemp)
-            while IFS= read -r line || [ -n "$line" ]; do
-                if [ "$line" = "## YOUR ROLE" ]; then
-                    cat "$POSTURE_FILE"
-                    echo ""
-                    echo "---"
-                    echo ""
-                fi
-                printf '%s\n' "$line"
-            done < "$SUPERVISOR_LOCAL" > "$TEMP_FILE"
-            mv "$TEMP_FILE" "$SUPERVISOR_LOCAL"
-            rm -f "$POSTURE_FILE"
-            echo -e "${GREEN}  ✓${NC} Injected POSTURE block into local supervisor"
+        POSTURE_FILE=$(mktemp)
+        sed -n '/<!-- critical-thinking:start -->/,/<!-- critical-thinking:end -->/p' "$REPO_SUPERVISOR" > "$POSTURE_FILE"
+        # Insert posture block + separator before ## YOUR ROLE / ## TON ROLE
+        TEMP_FILE=$(mktemp)
+        while IFS= read -r line || [ -n "$line" ]; do
+            if [ "$line" = "## YOUR ROLE" ] || [ "$line" = "## TON ROLE" ]; then
+                cat "$POSTURE_FILE"
+                echo ""
+                echo "---"
+                echo ""
+            fi
+            printf '%s\n' "$line"
+        done < "$SUPERVISOR_LOCAL" > "$TEMP_FILE"
+        mv "$TEMP_FILE" "$SUPERVISOR_LOCAL"
+        rm -f "$POSTURE_FILE"
+        if [ "$local_action" = "Updated" ]; then
+            echo -e "${BLUE}  ↑ UPDATED${NC} POSTURE block in local supervisor"
         else
-            echo -e "${YELLOW}  ! WARNING${NC} — Repo supervisor source not found, skipping patch"
+            echo -e "${GREEN}  ✓${NC} Injected POSTURE block into local supervisor"
         fi
     fi
 else

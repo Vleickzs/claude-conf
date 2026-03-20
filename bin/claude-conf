@@ -285,6 +285,18 @@ cmd_sync() {
                 _sync_file "$mod" "src/lib/validator.ts" "$HOME/.claude/scripts/command-guard/src/lib/validator.ts"
                 _sync_file "$mod" "src/lib/types.ts" "$HOME/.claude/scripts/command-guard/src/lib/types.ts"
                 ;;
+            critical-thinking)
+                if [ -f "$HOME/.claude/CLAUDE.md" ]; then
+                    if ! grep -q '<!-- critical-thinking:start -->' "$HOME/.claude/CLAUDE.md"; then
+                        echo -e "  ${YELLOW}DESYNC${NC}  critical-thinking (markers absent from CLAUDE.md)"
+                        echo -e "    ${DIM}Run: bash $CONF_DIR/critical-thinking/install.sh${NC}"
+                        SYNC_DESYNC=$((SYNC_DESYNC + 1))
+                    fi
+                else
+                    echo -e "  ${RED}MISSING${NC} ~/.claude/CLAUDE.md"
+                    SYNC_DESYNC=$((SYNC_DESYNC + 1))
+                fi
+                ;;
         esac
     done
 

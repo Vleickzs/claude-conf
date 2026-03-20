@@ -36,7 +36,7 @@ STATE_FILE="/tmp/cc-tab-${PPID}"
 
 CURRENT_STATE=$(cat "$STATE_FILE" 2>/dev/null || echo "CC")
 
-if echo "$PROMPT" | grep -qi '/supervisor'; then
+if echo "$PROMPT" | grep -qiE '(^|[[:space:]])/supervisor'; then
     echo "SUP" > "$STATE_FILE"
 elif [ "$CURRENT_STATE" != "SUP" ] && [ -n "$PROMPT" ]; then
     # Detecter un ticket SEULEMENT si on n'est PAS en mode supervisor
