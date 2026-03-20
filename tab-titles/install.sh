@@ -114,7 +114,8 @@ else
 # Couleur unique par projet (cksum = meme resultat bash/zsh)
 # Palette sans rouge ni vert (reserves pour SUP et WORKER)
 _cc_dot() {
-    local colors=(🟠 🟡 🔵 🟣 🟤 🩷 🩵 🟧)
+    [[ "$1" == "claude-conf" ]] && echo "⚙️" && return
+    local colors=(🟠 🟡 🔵 🟣 🟤 🩷 🩵 ⚪)
     local idx=$(( $(echo -n "$1" | cksum | cut -d' ' -f1) % 8 + 1 ))
     echo "${colors[$idx]}"
 }
