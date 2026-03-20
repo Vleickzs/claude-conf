@@ -125,6 +125,17 @@ Contributions are welcome. If you have an idea for a new module or an improvemen
 3. Follow the existing module structure (own directory, own `README.md`, own `install.sh`)
 4. Submit a pull request
 
+### Development
+
+This project is 100% shell scripts. [shellcheck](https://www.shellcheck.net/) is required for linting:
+
+```bash
+brew install shellcheck    # macOS
+# apt install shellcheck   # Linux
+
+shellcheck <module>/install.sh
+```
+
 ### Module structure convention
 
 ```

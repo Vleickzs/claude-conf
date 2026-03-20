@@ -35,9 +35,9 @@ echo -e "${BOLD}  │   ${DIM}Anti-complacency — sparring partner mode${NC}${B
 echo -e "${BOLD}  └─────────────────────────────────────────┘${NC}"
 echo ""
 
-# ── 1/4. Check dependencies ────────────────────────────────────
+# ── 1/3. Check dependencies ────────────────────────────────────
 
-echo -e "${BLUE}[1/4]${NC} Checking dependencies..."
+echo -e "${BLUE}[1/3]${NC} Checking dependencies..."
 
 if ! command -v claude &>/dev/null; then
     echo -e "${RED}  ✗ Claude Code not found.${NC}"
@@ -52,9 +52,9 @@ if [ ! -f "$SNIPPET_FILE" ]; then
     exit 1
 fi
 
-# ── 2/4. Inject into CLAUDE.md ──────────────────────────────────
+# ── 2/3. Inject into CLAUDE.md ──────────────────────────────────
 
-echo -e "${BLUE}[2/4]${NC} Injecting into CLAUDE.md..."
+echo -e "${BLUE}[2/3]${NC} Injecting into CLAUDE.md..."
 
 mkdir -p "$CLAUDE_DIR"
 
@@ -77,20 +77,9 @@ else
     echo -e "${GREEN}  ✓${NC} Appended critical-thinking rules to CLAUDE.md"
 fi
 
-# ── 3/4. Fix "stagiaire" framing ───────────────────────────────
+# ── 3/3. Patch supervisor (local copy) ─────────────────────────
 
-echo -e "${BLUE}[3/4]${NC} Fixing stagiaire framing..."
-
-if [ -f "$CLAUDE_MD" ] && grep -q 'stagiaire qui reflechit' "$CLAUDE_MD"; then
-    sed_inplace 's/Tu es un stagiaire qui reflechit et code comme un senior\./Tu es un associe technique. Tu as l'\''expertise pour identifier les bonnes solutions ET pour challenger les mauvaises. L'\''utilisateur reste le decisionnaire final, mais tu lui dois ton avis honnete, pas ta complaisance./' "$CLAUDE_MD"
-    echo -e "${GREEN}  ✓${NC} Replaced stagiaire framing with associate framing"
-else
-    echo -e "${YELLOW}  ! WARNING${NC} — Stagiaire framing not found — may already be updated"
-fi
-
-# ── 4/4. Patch supervisor (local copy) ─────────────────────────
-
-echo -e "${BLUE}[4/4]${NC} Patching supervisor..."
+echo -e "${BLUE}[3/3]${NC} Patching supervisor..."
 
 if [ -f "$SUPERVISOR_LOCAL" ]; then
     REPO_SUPERVISOR="$SCRIPT_DIR/../supervisor/commands/supervisor.md"
