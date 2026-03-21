@@ -120,6 +120,24 @@ The supervisor reads CLAUDE.md and extracts the relevant rules. If CLAUDE.md doe
 - Pitfalls to avoid (identified during investigation)
 - Execution order if multiple tasks
 
+#### Scope enforcement (ALWAYS when parallel workers)
+
+Before generating each worker prompt, the supervisor writes a scope file:
+
+```bash
+mkdir -p .claude-sessions/worker-scope
+cat > .claude-sessions/worker-scope/WORKER_SESSION_ID.json << 'SCOPE'
+{
+  "allowed_files": ["file1.ts", "file2.ts"],
+  "worker_ticket": "BUG-XXX"
+}
+SCOPE
+```
+
+The scope-enforcer hook will block any Write/Edit outside these files.
+Include in the worker prompt: "A hook enforces your file scope. If you need
+to modify a file not listed, note it in your report."
+
 #### Report block (ALWAYS included)
 
 ```
@@ -178,6 +196,7 @@ If **OK**:
 - Commit with message conforming to `git-commit-rules.md` (reference tickets)
 - Move BACKLOG tickets to DONE
 - Update INDEX.md
+- Clean up scope files: `rm -f .claude-sessions/worker-scope/{session_id}.json`
 - **Tell the user: "You can close the worker conversation."**
 
 If **NOT OK**:

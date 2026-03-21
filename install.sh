@@ -31,19 +31,25 @@ show_banner() {
 
 # ── Module definitions ────────────────────────────────────────────
 
-MODULES=("tab-titles" "handoff-kit" "supervisor" "command-guard" "critical-thinking")
+MODULES=("tab-titles" "handoff-kit" "supervisor" "command-guard" "critical-thinking" "pre-commit-gate" "backlog-kit" "claude-md-kit")
 DESCRIPTIONS=(
     "Smart terminal tab titles for Claude Code sessions"
     "Context monitoring, automatic backups, and session handoff"
     "CTO mode — investigate, delegate to workers, validate, never write code"
     "PreToolUse hook that validates every shell command before execution"
     "Anti-complacency rules — sparring partner mode for Claude Code"
+    "Reminder to run /check before committing — with universal stack detection"
+    "Universal ticketing system with automatic ID protection"
+    "Three slash commands to generate, clean up, and optimize CLAUDE.md"
 )
 DEPS=(
     "jq"
     "bun, jq"
     "none"
     "bun, jq"
+    "none"
+    "none"
+    "none"
     "none"
 )
 

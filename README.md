@@ -38,6 +38,10 @@
 | [**handoff-kit**](handoff-kit/) | Context monitoring, automatic backups, and structured session handoff | ![Ready](https://img.shields.io/badge/status-ready-brightgreen?style=flat-square) |
 | [**supervisor**](supervisor/) | CTO mode — investigate, delegate to workers, validate, never write code | ![Ready](https://img.shields.io/badge/status-ready-brightgreen?style=flat-square) |
 | [**command-guard**](command-guard/) | PreToolUse hook that validates every shell command before execution | ![Ready](https://img.shields.io/badge/status-ready-brightgreen?style=flat-square) |
+| [**critical-thinking**](critical-thinking/) | Anti-complacency rules — sparring partner mode for Claude Code | ![Ready](https://img.shields.io/badge/status-ready-brightgreen?style=flat-square) |
+| [**pre-commit-gate**](pre-commit-gate/) | Reminder to run /check before committing — with universal stack detection | ![Ready](https://img.shields.io/badge/status-ready-brightgreen?style=flat-square) |
+| [**backlog-kit**](backlog-kit/) | Universal ticketing system with automatic ID protection | ![Ready](https://img.shields.io/badge/status-ready-brightgreen?style=flat-square) |
+| [**claude-md-kit**](claude-md-kit/) | Three slash commands to generate, clean up, and optimize CLAUDE.md | ![Ready](https://img.shields.io/badge/status-ready-brightgreen?style=flat-square) |
 
 Each module works **standalone** or as part of this collection. Install only what you need.
 
@@ -175,6 +179,10 @@ module-name/
 | [**handoff-kit**](handoff-kit/) | Surveillance du contexte, sauvegardes automatiques et handoff structure | ![Pret](https://img.shields.io/badge/statut-pret-brightgreen?style=flat-square) |
 | [**supervisor**](supervisor/) | Mode CTO — investiguer, deleguer aux workers, valider, jamais ecrire de code | ![Pret](https://img.shields.io/badge/statut-pret-brightgreen?style=flat-square) |
 | [**command-guard**](command-guard/) | Hook PreToolUse qui valide chaque commande shell avant execution | ![Pret](https://img.shields.io/badge/statut-pret-brightgreen?style=flat-square) |
+| [**critical-thinking**](critical-thinking/) | Regles anti-complaisance — mode sparring partner pour Claude Code | ![Pret](https://img.shields.io/badge/statut-pret-brightgreen?style=flat-square) |
+| [**pre-commit-gate**](pre-commit-gate/) | Rappel de lancer /check avant de committer — detection de stack universelle | ![Pret](https://img.shields.io/badge/statut-pret-brightgreen?style=flat-square) |
+| [**backlog-kit**](backlog-kit/) | Systeme de ticketing universel avec protection automatique des IDs | ![Pret](https://img.shields.io/badge/statut-pret-brightgreen?style=flat-square) |
+| [**claude-md-kit**](claude-md-kit/) | Trois commandes pour generer, nettoyer et optimiser CLAUDE.md | ![Pret](https://img.shields.io/badge/statut-pret-brightgreen?style=flat-square) |
 
 Chaque module fonctionne **de maniere autonome** ou au sein de cette collection. Installez uniquement ce dont vous avez besoin.
 
