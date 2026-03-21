@@ -181,7 +181,7 @@ When the user brings back a worker report:
 1. **Read the report** carefully
 2. **Check modified files** — read each file touched, verify coherence
 3. **Run checks** — the project's linter, analyzer, test suite (from CLAUDE.md)
-4. **Check the diff** — `git diff` to see exactly what changed
+4. **Check the diff (SCOPED)** — use `git diff -- file1 file2 file3` scoped to the files listed in the worker's "Files modified" section. NEVER run a global `git diff` — the working tree may contain changes from other parallel workers. Other changes are NOT this worker's responsibility — do not evaluate or flag them. If the post-tool-use manifest exists for this worker's session_id (`.claude-sessions/manifests/{session_id}.txt`), use it as the mechanical source of truth for which files were actually touched.
 5. **Evaluate quality**:
    - Is the root cause actually fixed?
    - No band-aid fix?
@@ -193,6 +193,48 @@ When the user brings back a worker report:
    - Compare with the "Files modified" section of the report
    - If the manifest lists files NOT in the report → flag the divergence
    - If the report lists files NOT in the manifest → suspicious, investigate
+7. **Analyze discovered problems and missing tests** (MANDATORY)
+
+   **Every report contains a "Problems discovered (not fixed)" section. You NEVER treat it as optional.**
+
+   Even if the worker writes "None", you must acknowledge it explicitly. If problems are listed:
+
+   **Qualification** — For EACH reported problem, evaluate:
+   - **Severity**: is it a bug, a fragility, a UX issue, technical debt, a regression risk?
+   - **User impact**: can the end user perceive it? Even indirectly?
+   - **Worsening risk**: will this problem get worse if we don't address it now?
+
+   **Decision:**
+
+   | Verdict | Action |
+   |---------|--------|
+   | **Bug or real risk** | Create a BUG ticket immediately |
+   | **Technical debt / fragility** | Create an IMP ticket with justification |
+   | **UX issue, even minor** | Create an IMP ticket — perfect UX is a permanent goal |
+   | **Code smell / convention** | Create a low-priority IMP ticket |
+   | **Worker false positive** | Explain why it's not a problem (with technical justification) |
+   | **Missing tests reported** | Create an IMP ticket for each relevant entry |
+
+   **There is NO category "too minor for a ticket".** If a worker noticed it, it deserves tracking. Quality is built through the accumulation of correct details, not through big overhauls.
+
+   **Also analyze the "Missing tests (boy scout)" section and create IMP tickets.**
+
+8. **Present problems to user** with individual verdicts:
+   ```
+   ### Problems discovered by the worker
+
+   | # | Problem | Verdict | Action |
+   |---|---------|---------|--------|
+   | 1 | [description] | [bug/debt/ux/false positive] | [TICKET-ID created / justification if rejected] |
+   ```
+
+   **Each problem = 1 row in the table with its own individual verdict and action. Never group problems under a vague collective verdict like "minor points". Never skip a problem because it seems too small.**
+
+**RULE: Present discovered problems to the user BEFORE giving your verdict. The global verdict integrates your assessment of the problems — not the reverse. If a discovered problem is a bug or risk, the verdict CANNOT be "OK" without a ticket created for that problem.**
+
+**RULE: Never commit a report whose "Problems discovered" section hasn't been analyzed and communicated to the user.**
+
+9. **Give global verdict** (OK or NOT OK) — the verdict comes AFTER problem analysis.
 
 If **OK**:
 - Inform the user: "The work is validated, I can commit"
@@ -216,47 +258,6 @@ If **NOT OK**:
   - What must be fixed (with clear explanation)
   - The report format remains mandatory
 - **Do NOT tell them to close the conversation** — the worker must correct first
-
-### 5bis. Analyze discovered problems (MANDATORY)
-
-**Every report contains a "Problems discovered (not fixed)" section. You NEVER treat it as optional.**
-
-Even if the worker writes "None", you must acknowledge it explicitly. If problems are listed:
-
-#### Step 1: Qualification
-
-For EACH reported problem, evaluate:
-- **Severity**: is it a bug, a fragility, a UX issue, technical debt, a regression risk?
-- **User impact**: can the end user perceive it? Even indirectly?
-- **Worsening risk**: will this problem get worse if we don't address it now?
-
-#### Step 2: Decision
-
-| Verdict | Action |
-|---------|--------|
-| **Bug or real risk** | Create a BUG ticket immediately |
-| **Technical debt / fragility** | Create an IMP ticket with justification |
-| **UX issue, even minor** | Create an IMP ticket — perfect UX is a permanent goal |
-| **Code smell / convention** | Create a low-priority IMP ticket |
-| **Worker false positive** | Explain why it's not a problem (with technical justification) |
-| **Missing tests reported** | Create an IMP ticket for each relevant entry |
-
-**There is NO category "too minor for a ticket".** If a worker noticed it, it deserves tracking. Quality is built through the accumulation of correct details, not through big overhauls.
-
-#### Step 3: Communication
-
-Present to the user:
-```
-### Problems discovered by the worker
-
-| # | Problem | Verdict | Action |
-|---|---------|---------|--------|
-| 1 | [description] | [bug/debt/ux/false positive] | [TICKET-ID created / justification if rejected] |
-```
-
-**Also analyze the "Missing tests (boy scout)" section and create IMP tickets.**
-
-**RULE: Never commit a report whose "Problems discovered" section hasn't been analyzed and communicated to the user.**
 
 ### 6. Plan multi-ticket execution
 
@@ -315,6 +316,11 @@ JUSTIFICATION:
 | **Each wave awaits validation** | Never launch wave 2 before wave 1 is validated and committed |
 
 #### Prompt generation and launch files
+
+**Before writing prompt and launch files, create directories:**
+```bash
+mkdir -p .claude-sessions/prompts .claude-sessions/launch
+```
 
 For each worker prompt:
 
