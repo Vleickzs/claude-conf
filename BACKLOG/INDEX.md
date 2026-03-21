@@ -41,11 +41,11 @@
 | IMP-003 | Ajouter shellcheck comme pre-requis dev | Fait | Basse |
 | IMP-004 | Supervisor — scope strict sur le commit en multi-supervisors | Fait | Haute |
 | IMP-005 | handoff — supprimer CRITICAL auto-execute, garder WARNING only | Fait | Moyenne |
-| IMP-006 | supervisor — dedupliquer bloc POSTURE vs CLAUDE.md critical-thinking | A faire | Basse |
-| IMP-007 | Supprimer oneshot, absorber stack table dans fichier partage | A faire | Moyenne |
+| IMP-006 | supervisor — dedupliquer bloc POSTURE vs CLAUDE.md critical-thinking | Fait | Basse |
+| IMP-007 | Supprimer oneshot, absorber stack table dans fichier partage | Fait | Moyenne |
 | IMP-008 | handoff — rotation des backups (garder 35 derniers) | Fait | Basse |
 | IMP-009 | install.sh — modules invisibles dans MODULES array + README | A faire | Moyenne |
-| IMP-010 | worker rapport — boy scout rule + section tests manquants | A faire | Moyenne |
+| IMP-010 | worker rapport — boy scout rule + section tests manquants | Fait | Moyenne |
 | IMP-011 | command-guard — pre-bundle bun build pour eliminer cold start | A faire | Haute |
 | IMP-012 | command-guard — wrapper shell pre-filter pour skip non-Bash | A faire | Haute |
 | IMP-013 | command-guard — appendFile au lieu de read+write pour le log | A faire | Basse |
