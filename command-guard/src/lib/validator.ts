@@ -54,9 +54,9 @@ export class CommandValidator {
 	containsRmRf(command: string): boolean {
 		// Check for rm -rf in any form (rm -rf, rm -fr, rm -r -f, etc.)
 		const rmRfPatterns = [
-			/\brm\s+(-[a-zA-Z]*r[a-zA-Z]*f[a-zA-Z]*|-[a-zA-Z]*f[a-zA-Z]*r[a-zA-Z]*)\s/i,
-			/\brm\s+-r\s+-f\s/i,
-			/\brm\s+-f\s+-r\s/i,
+			/\brm\s+(-[a-zA-Z]*r[a-zA-Z]*f[a-zA-Z]*|-[a-zA-Z]*f[a-zA-Z]*r[a-zA-Z]*)(\s|$)/i,
+			/\brm\s+-r\s+-f(\s|$)/i,
+			/\brm\s+-f\s+-r(\s|$)/i,
 		];
 
 		for (const pattern of rmRfPatterns) {

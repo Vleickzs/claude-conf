@@ -23,7 +23,7 @@ Long conversations in Claude Code eventually hit the context window limit. When 
 | Component | Purpose |
 |-----------|---------|
 | **Statusline** | Displays real-time context usage percentage in the Claude Code status bar |
-| **Context monitor** | Warns at 65%, forces a save at 80% |
+| **Context monitor** | Warns at 65% so you can run `/handoff` manually |
 | **`/handoff` command** | Generates a structured continuation prompt for the next session |
 | **PreCompact backup** | Automatically saves the full transcript before any compaction |
 
@@ -61,20 +61,15 @@ For Claude to react to context alerts, add these instructions to your `CLAUDE.md
 ```markdown
 ## Handoff Rules
 
-### Signal `[SYSTEM-HANDOFF-WARNING]` (context 65-80%)
+### Signal `[SYSTEM-HANDOFF-WARNING]` (context ≥ 65%)
 - Inform the user that context is approaching its limit
 - Recommend running /handoff
 - Continue working normally
-
-### Signal `[SYSTEM-HANDOFF-CRITICAL]` (context > 80%)
-1. Do NOT respond to the current request
-2. Immediately execute the /handoff command
-3. No other action
 ```
 
 ## Usage
 
-**Automatic** — The system monitors context usage in the background. At 65%, Claude warns you. At 80%, a save is forced.
+**Automatic** — The system monitors context usage in the background. At 65%, Claude warns you so you can decide when to hand off.
 
 **Manual** — Run `/handoff` at any time to generate a continuation prompt.
 
@@ -84,7 +79,7 @@ For Claude to react to context alerts, add these instructions to your `CLAUDE.md
 
 ### Context monitor (`hooks/context-monitor.sh`)
 
-A [UserPromptSubmit](https://docs.anthropic.com/en/docs/claude-code/hooks) hook that runs on every message. It reads the current context percentage (written by the statusline) and injects warning or critical signals into the conversation when thresholds are crossed.
+A [UserPromptSubmit](https://docs.anthropic.com/en/docs/claude-code/hooks) hook that runs on every message. It reads the current context percentage (written by the statusline) and injects an informational warning when context usage exceeds 65%.
 
 ### PreCompact backup (`hooks/pre-compact-handoff.sh`)
 
@@ -103,8 +98,7 @@ A TypeScript application (run via Bun) that displays real-time context usage in 
 **Alert thresholds** — Edit `~/.claude/hooks/context-monitor.sh`:
 
 ```bash
-WARN_THRESHOLD=65      # Informational warning
-CRITICAL_THRESHOLD=80  # Forced handoff
+WARN_THRESHOLD=65      # Informational warning (default)
 ```
 
 **Statusline appearance** — Edit `~/.claude/scripts/statusline/statusline.config.json` to customize the display (progress bar style, displayed information, separators).
@@ -123,7 +117,6 @@ CRITICAL_THRESHOLD=80  # Forced handoff
 ├── context-data/                     # Per-session context percentage
 └── handoff-system/
     ├── sessions/                     # Backup files
-    ├── pending/                      # Pending user questions
     └── handoff.log                   # Handoff event log
 ```
 
@@ -167,7 +160,7 @@ Les conversations longues dans Claude Code finissent par atteindre la limite de 
 | Composant | Role |
 |-----------|------|
 | **Statusline** | Affiche le pourcentage de contexte utilise en temps reel dans la barre de statut |
-| **Moniteur de contexte** | Alerte a 65%, force la sauvegarde a 80% |
+| **Moniteur de contexte** | Alerte a 65% pour lancer `/handoff` manuellement |
 | **Commande `/handoff`** | Genere un prompt de continuation structure pour la session suivante |
 | **Backup PreCompact** | Sauvegarde automatique du transcript complet avant tout compactage |
 
@@ -205,20 +198,15 @@ Pour que Claude reagisse aux alertes de contexte, ajoutez ces instructions dans 
 ```markdown
 ## Regles Handoff
 
-### Signal `[SYSTEM-HANDOFF-WARNING]` (contexte 65-80%)
+### Signal `[SYSTEM-HANDOFF-WARNING]` (contexte ≥ 65%)
 - Informe l'utilisateur que le contexte approche de sa limite
 - Recommande d'executer /handoff
 - Continue le travail normalement
-
-### Signal `[SYSTEM-HANDOFF-CRITICAL]` (contexte > 80%)
-1. Ne reponds PAS a la demande en cours
-2. Execute immediatement la commande /handoff
-3. Aucune autre action
 ```
 
 ## Utilisation
 
-**Automatique** — Le systeme surveille le contexte en arriere-plan. A 65%, Claude vous previent. A 80%, la sauvegarde est forcee.
+**Automatique** — Le systeme surveille le contexte en arriere-plan. A 65%, Claude vous previent pour que vous puissiez decider quand faire le handoff.
 
 **Manuelle** — Executez `/handoff` a tout moment pour generer un prompt de continuation.
 
@@ -228,7 +216,7 @@ Pour que Claude reagisse aux alertes de contexte, ajoutez ces instructions dans 
 
 ### Moniteur de contexte (`hooks/context-monitor.sh`)
 
-Un hook [UserPromptSubmit](https://docs.anthropic.com/en/docs/claude-code/hooks) qui s'execute a chaque message. Il lit le pourcentage de contexte actuel (ecrit par la statusline) et injecte des signaux d'avertissement ou critiques dans la conversation.
+Un hook [UserPromptSubmit](https://docs.anthropic.com/en/docs/claude-code/hooks) qui s'execute a chaque message. Il lit le pourcentage de contexte actuel (ecrit par la statusline) et injecte un avertissement informatif quand l'utilisation depasse 65%.
 
 ### Backup PreCompact (`hooks/pre-compact-handoff.sh`)
 
@@ -247,8 +235,7 @@ Une application TypeScript (executee via Bun) qui affiche l'utilisation du conte
 **Seuils d'alerte** — Editer `~/.claude/hooks/context-monitor.sh` :
 
 ```bash
-WARN_THRESHOLD=65      # Alerte informative
-CRITICAL_THRESHOLD=80  # Handoff force
+WARN_THRESHOLD=65      # Alerte informative (par defaut)
 ```
 
 **Apparence de la statusline** — Editer `~/.claude/scripts/statusline/statusline.config.json` pour personnaliser l'affichage (style de barre de progression, informations affichees, separateurs).
@@ -267,7 +254,6 @@ CRITICAL_THRESHOLD=80  # Handoff force
 ├── context-data/                     # Pourcentage de contexte par session
 └── handoff-system/
     ├── sessions/                     # Fichiers de sauvegarde
-    ├── pending/                      # Questions utilisateur en attente
     └── handoff.log                   # Journal des handoffs
 ```
 

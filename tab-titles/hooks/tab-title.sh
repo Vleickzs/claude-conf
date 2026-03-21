@@ -23,8 +23,8 @@ PROJECT=$(basename "$PWD")
 # Couleur unique par projet (hash du nom)
 _dot() {
     if [ "$1" = "claude-conf" ]; then echo "⚙️"; return; fi
-    local colors=("🟠" "🟡" "🔵" "🟣" "🟤" "🩷" "🩵" "⚪")
-    local idx=$(( $(echo -n "$1" | cksum | cut -d' ' -f1) % 8 ))
+    local colors=("🟠" "🟡" "🔵" "🟣" "🟤" "⚫")
+    local idx=$(( $(echo -n "$1" | cksum | cut -d' ' -f1) % 6 ))
     echo "${colors[$idx]}"
 }
 

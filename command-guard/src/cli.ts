@@ -102,7 +102,7 @@ async function main() {
 		const hookOutput: HookOutput = {
 			hookSpecificOutput: {
 				hookEventName: "PreToolUse",
-				permissionDecision: result.action === "deny" ? "deny" : "ask",
+				permissionDecision: result.action === "deny" ? "block" : "ask",
 				permissionDecisionReason: message,
 			},
 		};

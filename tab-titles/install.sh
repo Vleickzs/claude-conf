@@ -115,8 +115,8 @@ else
 # Palette sans rouge ni vert (reserves pour SUP et WORKER)
 _cc_dot() {
     [[ "$1" == "claude-conf" ]] && echo "⚙️" && return
-    local colors=(🟠 🟡 🔵 🟣 🟤 🩷 🩵 ⚪)
-    local idx=$(( $(echo -n "$1" | cksum | cut -d' ' -f1) % 8 + 1 ))
+    local colors=(🟠 🟡 🔵 🟣 🟤 ⚫)
+    local idx=$(( $(echo -n "$1" | cksum | cut -d' ' -f1) % 6 + 1 ))
     echo "${colors[$idx]}"
 }
 
@@ -188,7 +188,11 @@ fi
 
 if grep -q 'oh-my-zsh' "$ZSHRC" 2>/dev/null; then
     if grep -q '^# DISABLE_AUTO_TITLE="true"' "$ZSHRC" 2>/dev/null; then
-        sed -i '' 's/^# DISABLE_AUTO_TITLE="true"/DISABLE_AUTO_TITLE="true"/' "$ZSHRC"
+        if [[ "$(uname)" == "Darwin" ]]; then
+            sed -i '' 's/^# DISABLE_AUTO_TITLE="true"/DISABLE_AUTO_TITLE="true"/' "$ZSHRC"
+        else
+            sed -i 's/^# DISABLE_AUTO_TITLE="true"/DISABLE_AUTO_TITLE="true"/' "$ZSHRC"
+        fi
         echo -e "${GREEN}✓${NC} oh-my-zsh DISABLE_AUTO_TITLE enabled (was commented out)"
     elif grep -q '^DISABLE_AUTO_TITLE="true"' "$ZSHRC" 2>/dev/null; then
         echo -e "${GREEN}✓${NC} oh-my-zsh DISABLE_AUTO_TITLE already enabled"

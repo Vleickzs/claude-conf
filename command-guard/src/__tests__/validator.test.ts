@@ -77,6 +77,25 @@ describe("CommandValidator", () => {
 		}
 	});
 
+	describe("Commands that MUST be DENIED - rm -rf at end of string (BUG-007)", () => {
+		const endOfStringCommands = [
+			"rm -rf",
+			"rm -fr",
+			"rm -r -f",
+			"rm -f -r",
+		];
+
+		for (const command of endOfStringCommands) {
+			it(`should DENY: ${command} (end of string)`, () => {
+				const result = validator.validate(command);
+				expect(result.isValid).toBe(false);
+				expect(result.action).toBe("deny");
+				expect(result.severity).toBe("CRITICAL");
+				expect(result.violations[0]).toContain("rm -rf is forbidden");
+			});
+		}
+	});
+
 	describe("Edge cases", () => {
 		it("should DENY empty commands", () => {
 			const result = validator.validate("");

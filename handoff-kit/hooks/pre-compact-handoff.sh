@@ -90,6 +90,10 @@ fi
 # Log l'evenement
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] PreCompact triggered ($trigger) - Saved: $backup_name" >> "$HOME/.claude/handoff-system/handoff.log"
 
+# Rotation : garder les 35 derniers backups
+ls -t "$global_backup_dir"/AUTOBACKUP-*.json 2>/dev/null | tail -n +36 | xargs rm -f 2>/dev/null
+ls -t "$global_backup_dir"/AUTOBACKUP-*.md 2>/dev/null | tail -n +36 | xargs rm -f 2>/dev/null
+
 # Retourner un message pour Claude (sera affiche dans la conversation)
 cat << EOF
 {
