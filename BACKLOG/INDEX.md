@@ -11,11 +11,13 @@
 | FEAT-005 | Module claude-md-kit — cleanup, boost, init pour CLAUDE.md projet | Fait | Haute |
 | FEAT-006 | scope-enforcer — hook PreToolUse bloquer ecriture hors scope worker | Fait | Haute |
 | FEAT-007 | PostToolUse hook — manifest fichiers modifies + detection tests fail | Fait | Haute |
-| FEAT-008 | launch-worker — script lancement worker avec config cc/ccd | A faire | Haute |
+| FEAT-008 | launch-worker — script lancement worker avec config cc/ccd | Fait | Haute |
 | FEAT-009 | supervisor-guard — hook PreToolUse bloquer Write/Edit en mode supervisor | A faire | Haute |
 | FEAT-010 | Module setup-project — bootstrap projet intelligent avec detection stack | Fait | Haute |
+| FEAT-011 | Module api-contract — gestion contrat API projets split | A faire | Haute |
+| FEAT-012 | Module explore — exploration parallele structuree | A faire | Basse |
 
-**Prochain ID suggere : FEAT-011**
+**Prochain ID suggere : FEAT-013**
 
 ## BUGS
 
@@ -59,5 +61,9 @@
 
 | IMP-020 | README.md — sections Module Overview pour les 4 nouveaux modules | A faire | Basse |
 | IMP-021 | scope-enforcer — ajouter tests automatises | A faire | Basse |
+| IMP-022 | setup-project — integrer auto-start hook (contexte auto premier message) | A faire | Haute |
 
-**Prochain ID suggere : IMP-022**
+| IMP-023 | supervisor — git diff scope aux fichiers du rapport (fausse scope violation) | A faire | Haute |
+| IMP-024 | supervisor — analyser problemes decouverts AVANT verdict global | A faire | Haute |
+
+**Prochain ID suggere : IMP-025**
