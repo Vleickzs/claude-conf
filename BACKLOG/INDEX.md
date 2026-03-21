@@ -9,7 +9,7 @@
 | FEAT-003 | Module oneshot — implementation rapide stack-agnostic | Fait | Basse |
 | FEAT-004 | Module backlog-kit — systeme de ticketing universel | Fait | Haute |
 | FEAT-005 | Module claude-md-kit — cleanup, boost, init pour CLAUDE.md projet | Fait | Haute |
-| FEAT-006 | scope-enforcer — hook PreToolUse bloquer ecriture hors scope worker | A faire | Haute |
+| FEAT-006 | scope-enforcer — hook PreToolUse bloquer ecriture hors scope worker | Fait | Haute |
 | FEAT-007 | PostToolUse hook — manifest fichiers modifies + detection tests fail | A faire | Haute |
 | FEAT-008 | launch-worker — script lancement worker avec config cc/ccd | A faire | Haute |
 | FEAT-009 | supervisor-guard — hook PreToolUse bloquer Write/Edit en mode supervisor | A faire | Haute |
@@ -45,7 +45,7 @@
 | IMP-006 | supervisor — dedupliquer bloc POSTURE vs CLAUDE.md critical-thinking | Fait | Basse |
 | IMP-007 | Supprimer oneshot, absorber stack table dans fichier partage | Fait | Moyenne |
 | IMP-008 | handoff — rotation des backups (garder 35 derniers) | Fait | Basse |
-| IMP-009 | install.sh — modules invisibles dans MODULES array + README | A faire | Moyenne |
+| IMP-009 | install.sh — modules invisibles dans MODULES array + README | Fait | Moyenne |
 | IMP-010 | worker rapport — boy scout rule + section tests manquants | Fait | Moyenne |
 | IMP-011 | command-guard — pre-bundle bun build pour eliminer cold start | A faire | Haute |
 | IMP-012 | command-guard — wrapper shell pre-filter pour skip non-Bash | A faire | Haute |
@@ -57,4 +57,7 @@
 | IMP-018 | handoff-kit — ajouter tests pre-compact-handoff.sh | A faire | Basse |
 | IMP-019 | handoff-kit — ajouter tests context-monitor.sh | A faire | Basse |
 
-**Prochain ID suggere : IMP-020**
+| IMP-020 | README.md — sections Module Overview pour les 4 nouveaux modules | A faire | Basse |
+| IMP-021 | scope-enforcer — ajouter tests automatises | A faire | Basse |
+
+**Prochain ID suggere : IMP-022**
