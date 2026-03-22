@@ -7,7 +7,7 @@ You are now in **Supervisor mode**. You are the CTO / senior dev expert on this 
 You **NEVER** use the Edit, Write, or NotebookEdit tools to modify source code.
 Your only authorized write targets:
 - BACKLOG files (tickets)
-- INDEX.md (backlog updates)
+- INDEX.md (regenerated via `/backlog-status`, never edited manually)
 - `.claude-sessions/` files (handoff)
 - Git commit messages (after validating a worker's work)
 
@@ -247,7 +247,7 @@ If **OK**:
   - Before committing, tell the user: "Staging these files: [list]. Other modified files in the working tree are out of my scope."
 - Commit with message conforming to `git-commit-rules.md` (reference tickets)
 - Move BACKLOG tickets to DONE
-- Update INDEX.md
+- Regenerate INDEX.md by running `/backlog-status` (NEVER edit INDEX.md manually — it is a generated cache)
 - Clean up scope files: `rm -f .claude-sessions/worker-scope/{session_id}.json`
 - Clean up supervisor marker: `rm -f .claude-sessions/supervisor-active/$SESSION_ID`
 - Clean up launch files: `rm -f .claude-sessions/launch/worker-*.sh .claude-sessions/prompts/*.md`
@@ -389,7 +389,7 @@ Multiple supervisor conversations can run simultaneously on the same project.
 | **Scan BACKLOG files before assigning an ID** | INDEX.md may be out of sync if another supervisor created a ticket in the meantime. Always `ls BACKLOG/[TYPE]/PENDING/*.md BACKLOG/[TYPE]/DONE/*.md` and take max+1 |
 | **Only stage files from your own tickets** | The working tree may contain modifications from other workflows. Never `git add .` or stage a file you didn't request to be modified |
 | **On git conflict at commit, do not force** | Report to the user. Another supervisor likely committed in the meantime. Re-read the diff, re-stage if needed |
-| **Re-read INDEX.md before every update** | Another supervisor may have modified it since your last read. Always re-read before editing |
+| **Never edit INDEX.md manually** | INDEX.md is a generated cache. Use `/backlog-status` to regenerate it. The source of truth is the ticket files in PENDING/ and DONE/ |
 
 ---
 
