@@ -12,7 +12,7 @@
 | FEAT-006 | scope-enforcer — hook PreToolUse bloquer ecriture hors scope worker | Fait | Haute |
 | FEAT-007 | PostToolUse hook — manifest fichiers modifies + detection tests fail | Fait | Haute |
 | FEAT-008 | launch-worker — script lancement worker avec config cc/ccd | Fait | Haute |
-| FEAT-009 | supervisor-guard — hook PreToolUse bloquer Write/Edit en mode supervisor | A faire | Haute |
+| FEAT-009 | supervisor-guard — hook PreToolUse bloquer Write/Edit en mode supervisor | Fait | Haute |
 | FEAT-010 | Module setup-project — bootstrap projet intelligent avec detection stack | Fait | Haute |
 | FEAT-011 | Module api-contract — gestion contrat API projets split | Fait | Haute |
 | FEAT-012 | Module explore — exploration parallele structuree | A faire | Basse |
@@ -31,7 +31,7 @@
 | BUG-006 | tab-titles — sed -i casse Linux | Fait | Moyenne |
 | BUG-007 | command-guard — regex rm -rf ne matche pas fin de string | Fait | Haute |
 | BUG-008 | handoff — PreCompact hook JSON (faux positif, JSON valide) | Fait | Moyenne |
-| BUG-009 | tab-titles — precmd() ecrase les precmd existants (oh-my-zsh, p10k) | A faire | Moyenne |
+| BUG-009 | tab-titles — precmd() ecrase les precmd existants (oh-my-zsh, p10k) | Fait | Moyenne |
 
 **Prochain ID suggere : BUG-010**
 
@@ -49,11 +49,11 @@
 | IMP-008 | handoff — rotation des backups (garder 35 derniers) | Fait | Basse |
 | IMP-009 | install.sh — modules invisibles dans MODULES array + README | Fait | Moyenne |
 | IMP-010 | worker rapport — boy scout rule + section tests manquants | Fait | Moyenne |
-| IMP-011 | command-guard — pre-bundle bun build pour eliminer cold start | A faire | Haute |
-| IMP-012 | command-guard — wrapper shell pre-filter pour skip non-Bash | A faire | Haute |
+| IMP-011 | command-guard — pre-bundle bun build pour eliminer cold start | Fait | Haute |
+| IMP-012 | command-guard — wrapper shell pre-filter pour skip non-Bash | Fait | Haute |
 | IMP-013 | command-guard — appendFile au lieu de read+write pour le log | A faire | Basse |
 | IMP-014 | CLAUDE.md — reduire section backlog au strict minimum | A faire | Basse |
-| IMP-015 | tab-titles — mise a jour du bloc .zshrc existant a la reinstall | A faire | Haute |
+| IMP-015 | tab-titles — mise a jour du bloc .zshrc existant a la reinstall | Fait | Haute |
 | IMP-016 | install.sh — ajouter tests automatises basiques | A faire | Basse |
 | IMP-017 | tab-titles — ajouter tests automatises basiques | A faire | Basse |
 | IMP-018 | handoff-kit — ajouter tests pre-compact-handoff.sh | A faire | Basse |
@@ -67,4 +67,6 @@
 | IMP-024 | supervisor — analyser problemes decouverts AVANT verdict global | Fait | Haute |
 | IMP-025 | Tests automatises pour les 5 modules sans couverture | A faire | Moyenne |
 
-**Prochain ID suggere : IMP-026**
+| IMP-026 | command-guard — cleanup ancien hook lors upgrade | A faire | Moyenne |
+
+**Prochain ID suggere : IMP-027**
