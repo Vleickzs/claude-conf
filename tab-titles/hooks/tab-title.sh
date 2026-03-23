@@ -97,6 +97,6 @@ esac
 
 # --- Appliquer le titre (OSC 1 = tab, OSC 2 = window) ---
 printf "\033]1;%s\007" "$TAB_TITLE" > /dev/tty 2>/dev/null
-printf "\033]2;%s — %s\007" "$TAB_TITLE" "$PROJECT" > /dev/tty 2>/dev/null
+printf "\033]2;%s %s\007" "$DOT" "$PROJECT" > /dev/tty 2>/dev/null
 
 exit 0
