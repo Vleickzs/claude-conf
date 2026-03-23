@@ -26,8 +26,8 @@ if printf '%s' "$PROMPT" | grep -qiE '(/supervisor|ABSOLUTE WORKER RULES|STRICT 
     exit 0
 fi
 
-# Normal session — show /start reminder
-echo "[CONTEXT] Tape /start pour charger le contexte projet (git, backlog, handoff)."
+# Normal session — instruct Claude to mention /start
+echo "[SYSTEM] First message of a new session. Before answering, mention briefly: 'Tip: /start to load project context (git, backlog, handoff).' — one short line, then answer normally."
 
 # Rotation: garder les 35 derniers marqueurs
 ls -t "$MARKER_DIR"/* 2>/dev/null | tail -n +36 | xargs rm -f 2>/dev/null
