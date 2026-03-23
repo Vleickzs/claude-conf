@@ -51,7 +51,7 @@ echo -e "${BLUE}[2/3]${NC} Installing commands..."
 mkdir -p "$COMMANDS_DIR"
 
 installed_count=0
-for cmd in setup-project start review; do
+for cmd in setup-project start review audit-conf; do
     src="$SCRIPT_DIR/commands/${cmd}.md"
     dst="$COMMANDS_DIR/${cmd}.md"
 
