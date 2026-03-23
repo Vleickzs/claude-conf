@@ -336,14 +336,22 @@ For each worker prompt:
    #!/bin/bash
    source ~/.claude-conf/worker.conf 2>/dev/null
    MODE="${WORKER_MODE:-normal}"
+   TICKET="{TICKET-ID}"
+   # Tab + window titles
+   printf "\033]1;🟢 %s\007" "$TICKET"
+   printf "\033]2;🟢 %s — %s\007" "$TICKET" "$(basename "$PWD")"
+   # Prevent Claude Code from overwriting titles
+   export CLAUDE_CODE_DISABLE_TERMINAL_TITLE=1
    if [ "$MODE" = "dangerous" ]; then
-       exec claude --dangerously-skip-permissions "$(cat .claude-sessions/prompts/{TICKET-ID}.md)"
+       exec claude --dangerously-skip-permissions "$(cat .claude-sessions/prompts/$TICKET.md)"
    else
-       exec claude "$(cat .claude-sessions/prompts/{TICKET-ID}.md)"
+       exec claude "$(cat .claude-sessions/prompts/$TICKET.md)"
    fi
    ```
    NOTE: The script uses `claude` directly (not `cc`/`ccd` which are zsh functions
-   unavailable in bash subshells). The WORKER_MODE config controls the permission mode.
+   unavailable in bash subshells). WORKER_MODE config controls permissions.
+   Tab/window titles are set by the script + CLAUDE_CODE_DISABLE_TERMINAL_TITLE
+   prevents Claude Code from overwriting them.
 
 3. **Tell the user:**
    ```
