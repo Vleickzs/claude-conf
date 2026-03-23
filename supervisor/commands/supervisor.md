@@ -227,8 +227,10 @@ When the user brings back a worker report:
 
    | # | Problem | Verdict | Action |
    |---|---------|---------|--------|
-   | 1 | [description] | [bug/debt/ux/false positive] | [TICKET-ID created / justification if rejected] |
+   | 1 | [description] | [bug/debt/ux/false positive] | [TICKET-ID created] or [rejected: reason] |
    ```
+
+   **The Action column must contain either a CREATED ticket ID (e.g. "IMP-027 created") or an explicit rejection with justification. NEVER write "ticket à créer" or "to create" — create it NOW, then put the ID. The supervisor creates tickets, it does not defer them.**
 
    **Each problem = 1 row in the table with its own individual verdict and action. Never group problems under a vague collective verdict like "minor points". Never skip a problem because it seems too small.**
 
