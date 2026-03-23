@@ -59,38 +59,29 @@ echo -e "${BLUE}[3/4]${NC} Configuration de Claude Code settings.json..."
 SETTINGS_FILE="$HOME/.claude/settings.json"
 
 if [ -f "$SETTINGS_FILE" ]; then
+    # UserPromptSubmit hook
     if grep -q "tab-title.sh" "$SETTINGS_FILE"; then
         echo -e "${GREEN}✓${NC} Hook UserPromptSubmit deja configure dans settings.json"
     else
-        echo -e "${YELLOW}!${NC} settings.json existe deja."
-        echo "  Ajoute manuellement ce bloc dans hooks.UserPromptSubmit :"
-        echo ""
-        echo '    {'
-        echo '      "matcher": "",'
-        echo '      "hooks": ['
-        echo '        {'
-        echo '          "type": "command",'
-        echo '          "command": "~/.claude/hooks/tab-title.sh"'
-        echo '        }'
-        echo '      ]'
-        echo '    }'
-        echo ""
+        HOOK_ENTRY='{"matcher": "", "hooks": [{"type": "command", "command": "~/.claude/hooks/tab-title.sh"}]}'
+        if jq -e '.hooks.UserPromptSubmit' "$SETTINGS_FILE" &>/dev/null; then
+            jq --argjson entry "$HOOK_ENTRY" '.hooks.UserPromptSubmit += [$entry]' "$SETTINGS_FILE" > "${SETTINGS_FILE}.tmp" && mv "${SETTINGS_FILE}.tmp" "$SETTINGS_FILE"
+        else
+            jq --argjson entry "$HOOK_ENTRY" '.hooks.UserPromptSubmit = [$entry]' "$SETTINGS_FILE" > "${SETTINGS_FILE}.tmp" && mv "${SETTINGS_FILE}.tmp" "$SETTINGS_FILE"
+        fi
+        echo -e "${GREEN}✓${NC} Hook UserPromptSubmit ajoute dans settings.json"
     fi
+    # SessionStart hook
     if grep -q "session-tab-title.sh" "$SETTINGS_FILE"; then
         echo -e "${GREEN}✓${NC} Hook SessionStart deja configure dans settings.json"
     else
-        echo -e "${YELLOW}!${NC} Ajoute manuellement ce bloc dans hooks.SessionStart :"
-        echo ""
-        echo '    {'
-        echo '      "matcher": "",'
-        echo '      "hooks": ['
-        echo '        {'
-        echo '          "type": "command",'
-        echo '          "command": "~/.claude/hooks/session-tab-title.sh"'
-        echo '        }'
-        echo '      ]'
-        echo '    }'
-        echo ""
+        HOOK_ENTRY='{"matcher": "", "hooks": [{"type": "command", "command": "~/.claude/hooks/session-tab-title.sh"}]}'
+        if jq -e '.hooks.SessionStart' "$SETTINGS_FILE" &>/dev/null; then
+            jq --argjson entry "$HOOK_ENTRY" '.hooks.SessionStart += [$entry]' "$SETTINGS_FILE" > "${SETTINGS_FILE}.tmp" && mv "${SETTINGS_FILE}.tmp" "$SETTINGS_FILE"
+        else
+            jq --argjson entry "$HOOK_ENTRY" '.hooks.SessionStart = [$entry]' "$SETTINGS_FILE" > "${SETTINGS_FILE}.tmp" && mv "${SETTINGS_FILE}.tmp" "$SETTINGS_FILE"
+        fi
+        echo -e "${GREEN}✓${NC} Hook SessionStart ajoute dans settings.json"
     fi
 else
     cat > "$SETTINGS_FILE" << 'SETTINGS'
@@ -185,7 +176,8 @@ cc() {
     _cc_check_updates
     _cc_update_prompt
     if _cc_disabled; then command claude "$@"; return; fi
-    local p=$(basename "$PWD") d=$(_cc_dot "$p")
+    local p=$(basename "$PWD")
+    local d=$(_cc_dot "$p")
     _cc_set_win "${d} ${p}"
     _cc_set_tab "${d} CC"
     export CC_TAB_TITLE="${d} CC"
@@ -199,7 +191,8 @@ ccs() {
     _cc_check_updates
     _cc_update_prompt
     if _cc_disabled; then command claude "$@"; return; fi
-    local p=$(basename "$PWD") d=$(_cc_dot "$p")
+    local p=$(basename "$PWD")
+    local d=$(_cc_dot "$p")
     _cc_set_win "${d} ${p}"
     _cc_set_tab "🔴 SUP"
     export CC_TAB_TITLE="🔴 SUP"
@@ -213,7 +206,8 @@ ccd() {
     _cc_check_updates
     _cc_update_prompt
     if _cc_disabled; then command claude --dangerously-skip-permissions "$@"; return; fi
-    local p=$(basename "$PWD") d=$(_cc_dot "$p")
+    local p=$(basename "$PWD")
+    local d=$(_cc_dot "$p")
     _cc_set_win "${d} ${p}"
     _cc_set_tab "${d} CC"
     export CC_TAB_TITLE="${d} CC"
@@ -230,7 +224,8 @@ ccw() {
     if _cc_disabled; then command claude "$@"; return; fi
     local label="${1:-WORK}"
     shift 2>/dev/null
-    local p=$(basename "$PWD") d=$(_cc_dot "$p")
+    local p=$(basename "$PWD")
+    local d=$(_cc_dot "$p")
     _cc_set_win "${d} ${p}"
     _cc_set_tab "🟢 ${label}"
     export CC_TAB_TITLE="🟢 ${label}"
