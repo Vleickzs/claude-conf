@@ -111,6 +111,38 @@ A security layer that intercepts every Bash command before Claude Code executes 
 
 [Full documentation >>>](command-guard/)
 
+### critical-thinking
+
+Anti-complacency module for Claude Code. Turns Claude into a technical sparring partner that challenges ideas instead of validating by default. Features a 5-marker classification system (Solide / Discutable / Simplifie / Angle mort / Faux), 5 anti-complacency reflexes (stress-test, hold position, detect errors, iterate, self-diagnose), and a 3-validation rule that triggers active fault-finding after 3 consecutive approvals.
+
+**Components:** rule injection into `~/.claude/CLAUDE.md`, optional CTO POSTURE patch for supervisor.
+
+[Full documentation >>>](critical-thinking/)
+
+### pre-commit-gate
+
+Reminder to run `/check` before committing, with a universal validation command. The PreToolUse hook detects `git commit` and reminds you to run `/check` first (never blocks). The `/check` command auto-detects your project stack (Node, Flutter, Go, Rust, Python, Ruby, PHP, Swift, Make) and runs the full lint + build + tests pipeline.
+
+**Components:** PreToolUse hook (Bash), `/check` slash command.
+
+[Full documentation >>>](pre-commit-gate/)
+
+### backlog-kit
+
+Universal ticketing system for Claude Code with automatic ID protection. Manages three ticket types (bugs, features, improvements) with structured templates and priority/complexity conventions. The backlog-guard hook (PreToolUse Write) blocks duplicate ticket IDs across concurrent sessions. INDEX.md is auto-generated and never manually edited.
+
+**Components:** backlog-guard hook, `/backlog-init`, `/backlog-bug`, `/backlog-feat`, `/backlog-imp`, `/backlog-status` slash commands.
+
+[Full documentation >>>](backlog-kit/)
+
+### claude-md-kit
+
+Three slash commands for managing your project's CLAUDE.md. `/claude-md-init` generates a CLAUDE.md from scratch by analyzing your codebase. `/claude-md-cleanup` removes duplicates with global config and generic filler. `/claude-md-boost` rewrites the CLAUDE.md with expert prompt engineering and stack-specific conventions. All three commands analyze real code and ask for validation before writing.
+
+**Components:** `/claude-md-init`, `/claude-md-cleanup`, `/claude-md-boost` slash commands.
+
+[Full documentation >>>](claude-md-kit/)
+
 ## Requirements
 
 | Dependency | Required by | Install |
@@ -119,6 +151,7 @@ A security layer that intercepts every Bash command before Claude Code executes 
 | [jq](https://jqlang.github.io/jq/) | All modules | `brew install jq` |
 | [Bun](https://bun.sh) | handoff-kit, command-guard | `curl -fsSL https://bun.sh/install \| bash` |
 | zsh | tab-titles | Default on macOS |
+| [shellcheck](https://www.shellcheck.net/) | Development (linting) | `brew install shellcheck` |
 
 ## Contributing
 
@@ -219,6 +252,41 @@ bash install.sh
 | [jq](https://jqlang.github.io/jq/) | Tous les modules | `brew install jq` |
 | [Bun](https://bun.sh) | handoff-kit, command-guard | `curl -fsSL https://bun.sh/install \| bash` |
 | zsh | tab-titles | Par defaut sur macOS |
+| [shellcheck](https://www.shellcheck.net/) | Developpement (linting) | `brew install shellcheck` |
+
+## Presentation des modules
+
+### critical-thinking
+
+Module anti-complaisance pour Claude Code. Transforme Claude en sparring partner technique qui challenge les idees au lieu de valider par defaut. Systeme de classification en 5 marqueurs (Solide / Discutable / Simplifie / Angle mort / Faux), 5 reflexes anti-complaisance (stress-test, maintien de position, detection d'erreurs, iteration, auto-diagnostic), et la regle des 3 validations qui declenche une recherche active de failles apres 3 approbations consecutives.
+
+**Composants :** injection de regles dans `~/.claude/CLAUDE.md`, patch optionnel du bloc CTO POSTURE dans supervisor.
+
+[Documentation complete >>>](critical-thinking/)
+
+### pre-commit-gate
+
+Rappel de lancer `/check` avant de committer, avec une commande de validation universelle. Le hook PreToolUse detecte `git commit` et rappelle de lancer `/check` d'abord (sans jamais bloquer). La commande `/check` detecte automatiquement le stack du projet (Node, Flutter, Go, Rust, Python, Ruby, PHP, Swift, Make) et lance le pipeline complet lint + build + tests.
+
+**Composants :** hook PreToolUse (Bash), commande `/check`.
+
+[Documentation complete >>>](pre-commit-gate/)
+
+### backlog-kit
+
+Systeme de ticketing universel pour Claude Code avec protection automatique des IDs. Gere trois types de tickets (bugs, features, improvements) avec des templates structures et des conventions de priorite/complexite. Le hook backlog-guard (PreToolUse Write) bloque les IDs dupliques entre sessions concurrentes. INDEX.md est auto-genere et jamais edite manuellement.
+
+**Composants :** hook backlog-guard, commandes `/backlog-init`, `/backlog-bug`, `/backlog-feat`, `/backlog-imp`, `/backlog-status`.
+
+[Documentation complete >>>](backlog-kit/)
+
+### claude-md-kit
+
+Trois commandes slash pour gerer le CLAUDE.md de vos projets. `/claude-md-init` genere un CLAUDE.md from scratch en analysant le code. `/claude-md-cleanup` supprime les doublons avec la config globale et le contenu generique. `/claude-md-boost` reecrit le CLAUDE.md avec du prompt engineering expert et des conventions specifiques au stack. Les trois commandes analysent le vrai code et demandent validation avant d'ecrire.
+
+**Composants :** commandes `/claude-md-init`, `/claude-md-cleanup`, `/claude-md-boost`.
+
+[Documentation complete >>>](claude-md-kit/)
 
 ## Contribuer
 

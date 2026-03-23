@@ -1,5 +1,6 @@
 #!/usr/bin/env bun
 
+import { appendFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { HookInput, HookOutput } from "./lib/types";
 import { CommandValidator } from "./lib/validator";
@@ -26,15 +27,7 @@ async function logSecurityEvent(
 
 	try {
 		const logLine = `${JSON.stringify(logEntry)}\n`;
-		const file = Bun.file(LOG_FILE);
-		const exists = await file.exists();
-
-		if (exists) {
-			const existingContent = await file.text();
-			await Bun.write(LOG_FILE, existingContent + logLine);
-		} else {
-			await Bun.write(LOG_FILE, logLine);
-		}
+		await appendFile(LOG_FILE, logLine);
 
 		console.error(
 			`[SECURITY] ${result.isValid ? "ALLOWED" : "BLOCKED"}: ${command.substring(0, 100)}`,
