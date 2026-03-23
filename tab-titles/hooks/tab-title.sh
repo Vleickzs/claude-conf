@@ -39,9 +39,14 @@ CURRENT_STATE=$(cat "$STATE_FILE" 2>/dev/null || echo "CC")
 
 if echo "$PROMPT" | grep -qiE '(^|[[:space:]])/supervisor'; then
     echo "SUP" > "$STATE_FILE"
-elif [ "$CURRENT_STATE" != "SUP" ] && [ -n "$PROMPT" ]; then
-    # Detecter un ticket SEULEMENT si on n'est PAS en mode supervisor
+elif [ -n "$PROMPT" ]; then
+    # Detecter un ticket ou un prompt worker (PRIORITE sur tout sauf /supervisor)
+    # Un prompt worker contient ABSOLUTE WORKER RULES ou STRICT SCOPE
+    IS_WORKER_PROMPT=false
+    echo "$PROMPT" | grep -qE '(ABSOLUTE WORKER RULES|STRICT SCOPE)' && IS_WORKER_PROMPT=true
+
     TICKET_MATCH=$(echo "$PROMPT" | grep -oE '(BUG|FEAT|IMP)-[0-9]+' | head -1)
+
     if [ -n "$TICKET_MATCH" ]; then
         CONTEXT=$(echo "$PROMPT" | sed "s/.*${TICKET_MATCH}[^a-zA-Z]*//" | head -1 | cut -c1-30 | sed 's/[[:space:]]*$//')
         if [ -n "$CONTEXT" ]; then
@@ -49,6 +54,8 @@ elif [ "$CURRENT_STATE" != "SUP" ] && [ -n "$PROMPT" ]; then
         else
             echo "WORK:${TICKET_MATCH}" > "$STATE_FILE"
         fi
+    elif [ "$IS_WORKER_PROMPT" = true ]; then
+        echo "WORK:WORKER" > "$STATE_FILE"
     fi
 fi
 
