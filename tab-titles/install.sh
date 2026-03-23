@@ -152,6 +152,12 @@ _cc_update_prompt() {
 # Check if tab-titles module is disabled
 _cc_disabled() { grep -q "^tab-titles$" "$HOME/.claude-conf-disabled" 2>/dev/null; }
 
+# Re-set titles after Claude startup (Claude overrides them during init)
+_cc_delayed_title() {
+    local tab="$1" win="$2"
+    (sleep 2 && printf "\033]1;%s\007" "$tab" > /dev/tty 2>/dev/null && printf "\033]2;%s\007" "$win" > /dev/tty 2>/dev/null) &
+}
+
 # cc : session normale (also aliased as 'claude')
 cc() {
     _cc_check_updates
@@ -160,6 +166,7 @@ cc() {
     local p=$(basename "$PWD") d=$(_cc_dot "$p")
     _cc_set_win "${d} ${p}"
     _cc_set_tab "${d} CC"
+    _cc_delayed_title "${d} CC" "${d} ${p}"
     export CLAUDE_CODE_DISABLE_TERMINAL_TITLE=1
     command claude "$@"
 }
@@ -172,6 +179,7 @@ ccs() {
     local p=$(basename "$PWD") d=$(_cc_dot "$p")
     _cc_set_win "${d} ${p}"
     _cc_set_tab "🔴 SUP"
+    _cc_delayed_title "🔴 SUP" "${d} ${p}"
     export CLAUDE_CODE_DISABLE_TERMINAL_TITLE=1
     command claude "$@"
 }
@@ -184,6 +192,7 @@ ccd() {
     local p=$(basename "$PWD") d=$(_cc_dot "$p")
     _cc_set_win "${d} ${p}"
     _cc_set_tab "${d} CC"
+    _cc_delayed_title "${d} CC" "${d} ${p}"
     export CLAUDE_CODE_DISABLE_TERMINAL_TITLE=1
     command claude --dangerously-skip-permissions "$@"
 }
@@ -199,6 +208,7 @@ ccw() {
     local p=$(basename "$PWD") d=$(_cc_dot "$p")
     _cc_set_win "${d} ${p}"
     _cc_set_tab "🟢 ${label}"
+    _cc_delayed_title "🟢 ${label}" "${d} ${p}"
     export CLAUDE_CODE_DISABLE_TERMINAL_TITLE=1
     command claude "$@"
 }
