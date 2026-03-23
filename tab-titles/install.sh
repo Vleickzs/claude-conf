@@ -160,7 +160,8 @@ cc() {
     local p=$(basename "$PWD") d=$(_cc_dot "$p")
     _cc_set_win "${d} ${p}"
     _cc_set_tab "${d} CC"
-    CLAUDE_CODE_DISABLE_TERMINAL_TITLE=1 command claude "$@"
+    export CLAUDE_CODE_DISABLE_TERMINAL_TITLE=1
+    command claude "$@"
 }
 
 # ccs : mode supervisor
@@ -171,7 +172,8 @@ ccs() {
     local p=$(basename "$PWD") d=$(_cc_dot "$p")
     _cc_set_win "${d} ${p}"
     _cc_set_tab "🔴 SUP"
-    CLAUDE_CODE_DISABLE_TERMINAL_TITLE=1 command claude "$@"
+    export CLAUDE_CODE_DISABLE_TERMINAL_TITLE=1
+    command claude "$@"
 }
 
 # ccd : mode dangerously-skip-permissions
@@ -182,7 +184,8 @@ ccd() {
     local p=$(basename "$PWD") d=$(_cc_dot "$p")
     _cc_set_win "${d} ${p}"
     _cc_set_tab "${d} CC"
-    CLAUDE_CODE_DISABLE_TERMINAL_TITLE=1 command claude --dangerously-skip-permissions "$@"
+    export CLAUDE_CODE_DISABLE_TERMINAL_TITLE=1
+    command claude --dangerously-skip-permissions "$@"
 }
 
 # ccw : mode worker sur un ticket
@@ -196,7 +199,8 @@ ccw() {
     local p=$(basename "$PWD") d=$(_cc_dot "$p")
     _cc_set_win "${d} ${p}"
     _cc_set_tab "🟢 ${label}"
-    CLAUDE_CODE_DISABLE_TERMINAL_TITLE=1 command claude "$@"
+    export CLAUDE_CODE_DISABLE_TERMINAL_TITLE=1
+    command claude "$@"
 }
 
 # 'claude' → 'cc' (tab titles always active)
