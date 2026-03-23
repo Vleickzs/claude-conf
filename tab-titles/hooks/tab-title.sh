@@ -44,11 +44,11 @@ elif [ -n "$PROMPT" ]; then
     IS_WORKER_PROMPT=false
     echo "$PROMPT" | grep -qE '(ABSOLUTE WORKER RULES|STRICT SCOPE)' && IS_WORKER_PROMPT=true
 
-    TICKET_MATCH=$(echo "$PROMPT" | grep -oE '(BUG|FEAT|IMP)-[0-9]+' | head -1)
+    # Ticket in first 3 lines = user intent (typed or worker prompt header)
+    TICKET_MATCH=$(echo "$PROMPT" | head -3 | grep -oE '(BUG|FEAT|IMP)-[0-9]+' | head -1)
 
     if [ "$CURRENT_STATE" = "SUP" ]; then
         # SUP is sticky — only a real worker prompt can override it
-        # A supervisor mentioning ticket IDs in conversation does NOT switch to worker
         if [ "$IS_WORKER_PROMPT" = true ] && [ -n "$TICKET_MATCH" ]; then
             echo "WORK:${TICKET_MATCH}" > "$STATE_FILE"
         elif [ "$IS_WORKER_PROMPT" = true ]; then
@@ -56,9 +56,10 @@ elif [ -n "$PROMPT" ]; then
         fi
         # else: stay SUP
     else
-        # Normal or worker state — ticket detection works normally
+        # Normal or worker state — ticket detection only from first 3 lines
+        # Prevents false matches from pasted logs, install output, etc.
         if [ -n "$TICKET_MATCH" ]; then
-            CONTEXT=$(echo "$PROMPT" | sed "s/.*${TICKET_MATCH}[^a-zA-Z]*//" | head -1 | cut -c1-30 | sed 's/[[:space:]]*$//')
+            CONTEXT=$(echo "$PROMPT" | head -3 | sed "s/.*${TICKET_MATCH}[^a-zA-Z]*//" | head -1 | cut -c1-30 | sed 's/[[:space:]]*$//')
             if [ -n "$CONTEXT" ]; then
                 echo "WORK:${TICKET_MATCH}:${CONTEXT}" > "$STATE_FILE"
             else
