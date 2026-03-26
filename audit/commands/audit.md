@@ -1,9 +1,16 @@
 ---
 description: Deep code audit — security, tests, architecture, performance, stack-specific checks
-argument-hint: [security|tests|architecture|performance|ux|costs|<custom>]
+argument-hint: [--changed | --since <commit/date> | security | tests | architecture | performance | ux | costs | <custom>]
 ---
 
 Run a structured code audit on this project. Adapts to the detected stack.
+
+**Modes:**
+- `/audit` — full audit, all relevant axes, all files
+- `/audit security` (or tests, architecture, etc.) — full audit, single axis
+- `/audit --changed` — incremental: only files changed since the last audit report
+- `/audit --since abc123` — incremental: only files changed since the given commit or date
+- `/audit --changed security` — incremental + single axis
 
 ## Step 1 — Context & scope
 
@@ -16,13 +23,23 @@ Run a structured code audit on this project. Adapts to the detected stack.
    - **Build/test commands**
    - **Project conventions**
 
-3. Determine audit scope:
-   - If `$ARGUMENTS` is provided → audit ONLY that axis
-   - If no argument → auto-detect relevant axes (see Step 2)
-
-4. Check for previous audit reports:
+3. Check for previous audit reports:
    - `ls -t audit-reports/*.md 2>/dev/null | head -1`
-   - If found → note the filename, it will be used for delta comparison in Step 7
+   - If found → note the filename and its date, used for delta comparison in Step 7
+
+4. Parse arguments and determine mode:
+
+   **Incremental mode** (if `--changed` or `--since` in arguments):
+   - `--changed`: find the date of the last audit report. If none exists, tell the user "No previous audit found — running full audit instead." and fall back to full mode.
+     Get changed files: `git diff --name-only --diff-filter=ACMR $(git log --since="YYYY-MM-DD" --format=%H | tail -1)..HEAD` (using the last report date)
+   - `--since <ref>`: get changed files: `git diff --name-only --diff-filter=ACMR <ref>..HEAD`
+   - Store the list of changed files. These will be the ONLY files explored and reviewed.
+   - If 0 changed files → tell user "No files changed since [ref]. Nothing to audit." and stop.
+   - Remaining arguments after `--changed`/`--since <ref>` are treated as axis filter.
+
+   **Full mode** (default):
+   - If `$ARGUMENTS` is provided (and not `--changed`/`--since`) → audit ONLY that axis
+   - If no argument → auto-detect relevant axes (see Step 2)
 
 ## Step 2 — Detect relevant axes
 
@@ -51,9 +68,10 @@ Present the selected axes to the user:
 ```
 AUDIT PLAN — [project name]
 Stack: [detected stack]
-Size: [X source files] → [small/medium/large]
+Mode: [full / incremental (X files changed since YYYY-MM-DD)]
+Size: [X source files] → [small/medium/large] (or X changed files in incremental)
 Axes: [list of selected axes]
-Agents: [2-4] review agents
+Agents: [1-4] review agents
 Previous audit: [date of last report, or "none"]
 
 Proceed? [Y/n]
@@ -63,7 +81,11 @@ Wait for confirmation before launching agents.
 
 ## Step 3 — Exploration phase
 
-Launch **1 agent** (subagent_type: `Explore`, thoroughness: "very thorough"):
+**Incremental mode:** Skip the Explore agent entirely. The changed files list IS the audit map.
+Classify each changed file into the relevant axes based on its path and content (quick read of first 20 lines).
+This saves ~2 minutes on incremental audits.
+
+**Full mode:** Launch **1 agent** (subagent_type: `Explore`, thoroughness: "very thorough"):
 
 **Mission:** Map the codebase for the audit. For each selected axis, identify which files
 are relevant. Produce a structured map:
@@ -94,9 +116,11 @@ Split the axes across agents to minimize file overlap:
 | Reviewer 3 | Architecture + Performance | Core logic, services, models, DB queries |
 | Reviewer 4 | Stack-specific (if applicable) | UX, data integrity, API costs, deployment |
 
-**Small project (< 20 files):** merge Reviewers 1+2 into a single agent, skip Reviewer 4.
-**Medium project (20-80 files):** skip Reviewer 4 unless stack-specific axes are critical.
-**Large project (> 80 files):** all 4 reviewers.
+**Sizing rules:**
+- **Incremental (< 15 changed files):** 1-2 agents max. Merge all axes into 1 agent if < 5 files.
+- **Small project (< 20 source files):** merge Reviewers 1+2 into a single agent, skip Reviewer 4.
+- **Medium project (20-80 files):** skip Reviewer 4 unless stack-specific axes are critical.
+- **Large project (> 80 files):** all 4 reviewers.
 
 Each agent receives:
 1. The audit map (their relevant files ONLY)
@@ -167,7 +191,8 @@ Use `date +%Y-%m-%d_%H-%M` to generate it. Never use date-only filenames — mul
 # Audit Report — [project name]
 **Date:** [full timestamp]
 **Stack:** [detected stack]
-**Project size:** [X source files]
+**Mode:** [full / incremental (X files changed since ref)]
+**Scope:** [X source files (full) or X changed files (incremental)]
 **Axes audited:** [list]
 **Agents used:** [count]
 **Duration:** [total time from start to report generation]
@@ -251,6 +276,7 @@ Also display a summary in the conversation:
 ```
 AUDIT COMPLETE — [project name]
 ═══════════════════════════════
+Mode: [full / incremental (X changed files)]
 Duration: [Xm Xs]
 Findings: X critical, X high, X medium, X low
 Rejected: X false positives
@@ -277,3 +303,4 @@ If not, add it (audit reports contain security findings — never commit them).
 - **Respect existing BACKLOG conventions** — scan IDs, use proper format
 - **Audit reports contain sensitive data** — ensure they're gitignored
 - **Scale agents to project size** — don't launch 4 agents on a 10-file project
+- **Incremental skips exploration** — changed files list IS the map, no Explore agent needed
