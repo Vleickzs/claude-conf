@@ -426,10 +426,27 @@ Multiple supervisor conversations can run simultaneously on the same project.
 After committing the last wave of your execution plan, evaluate:
 
 1. **Are ALL tickets from your plan in DONE/?** If not, you're not finished.
-2. **Did worker reports create new tickets (problems discovered, boy scout)?**
-   - If those new tickets are in YOUR scope → plan another wave, you're not done.
-   - If they are out of scope (different module, different concern) → they are for a future supervisor.
-3. **If everything is done**, tell the user:
+2. **Audit ALL "Problems discovered" and "Missing tests (boy scout)" from EVERY worker report in this scope.**
+   For each item reported by a worker, verify ONE of these is true:
+   - A ticket was **created** (ID exists in BACKLOG) → ✅
+   - The item was **explicitly rejected** with technical justification → ✅
+   - Neither → ❌ **STOP. Triage it now.** Create the ticket or reject with justification.
+
+   **Present the audit to the user as a checklist:**
+   ```
+   AUDIT — Discovered problems & boy scout
+   ├── Worker [TICKET-ID]:
+   │   ├── ✅ "problem X" → IMP-029 created
+   │   ├── ✅ "problem Y" → rejected: [reason]
+   │   └── ❌ "missing tests for Z" → NOT TRIAGED — creating ticket now
+   └── Worker [TICKET-ID]:
+       └── ✅ "no problems discovered" → acknowledged
+   ```
+
+   **If ANY item is ❌:** create the tickets, then re-evaluate scope:
+   - New tickets in YOUR scope → plan another wave, generate worker prompt
+   - New tickets out of scope → leave for a future supervisor
+3. **If everything is done** (all plan tickets in DONE, all discovered items triaged), tell the user:
 
 > "Scope terminé — tous les tickets de ce plan sont commités. Tu peux fermer cette conversation."
 
