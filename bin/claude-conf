@@ -359,6 +359,9 @@ cmd_sync() {
             supervisor)
                 _sync_file "$mod" "commands/supervisor.md" "$HOME/.claude/commands/supervisor.md"
                 ;;
+            audit)
+                _sync_file "$mod" "commands/audit.md" "$HOME/.claude/commands/audit.md"
+                ;;
             command-guard)
                 _sync_file "$mod" "src/cli.ts" "$HOME/.claude/scripts/command-guard/src/cli.ts"
                 _sync_file "$mod" "src/lib/validator.ts" "$HOME/.claude/scripts/command-guard/src/lib/validator.ts"

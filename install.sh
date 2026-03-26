@@ -31,7 +31,7 @@ show_banner() {
 
 # ── Module definitions ────────────────────────────────────────────
 
-MODULES=("tab-titles" "handoff-kit" "supervisor" "command-guard" "critical-thinking" "pre-commit-gate" "backlog-kit" "claude-md-kit" "setup-project" "api-contract" "scope-enforcer" "post-tool-use")
+MODULES=("tab-titles" "handoff-kit" "supervisor" "command-guard" "critical-thinking" "pre-commit-gate" "backlog-kit" "claude-md-kit" "setup-project" "api-contract" "scope-enforcer" "post-tool-use" "audit")
 DESCRIPTIONS=(
     "Smart terminal tab titles for Claude Code sessions"
     "Context monitoring, automatic backups, and session handoff"
@@ -45,6 +45,7 @@ DESCRIPTIONS=(
     "API contract management — sync reminders for split frontend/backend projects"
     "PreToolUse hook — block writes outside worker scope"
     "PostToolUse hook — manifest of modified files and test failure detection"
+    "Deep code audit — security, tests, architecture, performance"
 )
 DEPS=(
     "jq"
@@ -59,6 +60,7 @@ DEPS=(
     "jq"
     "jq"
     "jq"
+    "none"
 )
 
 # ── Helpers ───────────────────────────────────────────────────────
