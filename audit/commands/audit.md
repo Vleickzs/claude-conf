@@ -20,6 +20,10 @@ Run a structured code audit on this project. Adapts to the detected stack.
    - If `$ARGUMENTS` is provided → audit ONLY that axis
    - If no argument → auto-detect relevant axes (see Step 2)
 
+4. Check for previous audit reports:
+   - `ls -t audit-reports/*.md 2>/dev/null | head -1`
+   - If found → note the filename, it will be used for delta comparison in Step 7
+
 ## Step 2 — Detect relevant axes
 
 Based on the stack and project structure, select which axes to audit.
@@ -37,12 +41,20 @@ Based on the stack and project structure, select which axes to audit.
 - **API costs** — if LLM/SaaS API calls detected (OpenAI, Anthropic, Stripe, etc.)
 - **Deployment** — if Docker, CI/CD, systemd, Caddy files present
 
+**Estimate project size** to calibrate agent count:
+- Count source files (exclude tests, config, generated): `find src/ lib/ app/ . -maxdepth 3 -name "*.py" -o -name "*.ts" -o -name "*.js" -o -name "*.dart" -o -name "*.go" -o -name "*.rs" | grep -v test | grep -v __pycache__ | grep -v node_modules | wc -l`
+- **Small** (< 20 files): 2 agents (merge reviewers 1+2, keep 3)
+- **Medium** (20-80 files): 3 agents (reviewers 1, 2, 3)
+- **Large** (> 80 files): 4 agents (all reviewers)
+
 Present the selected axes to the user:
 ```
 AUDIT PLAN — [project name]
 Stack: [detected stack]
+Size: [X source files] → [small/medium/large]
 Axes: [list of selected axes]
-Estimated: [2-4] review agents
+Agents: [2-4] review agents
+Previous audit: [date of last report, or "none"]
 
 Proceed? [Y/n]
 ```
@@ -70,7 +82,8 @@ This map is the INPUT for the review agents. No file should be audited blindly.
 
 ## Step 4 — Review phase
 
-Launch **2-4 agents** in parallel (subagent_type: `feature-dev:code-reviewer`).
+Launch agents in parallel (subagent_type: `feature-dev:code-reviewer`).
+Number of agents determined by project size (Step 2).
 
 Split the axes across agents to minimize file overlap:
 
@@ -81,8 +94,9 @@ Split the axes across agents to minimize file overlap:
 | Reviewer 3 | Architecture + Performance | Core logic, services, models, DB queries |
 | Reviewer 4 | Stack-specific (if applicable) | UX, data integrity, API costs, deployment |
 
-**Skip Reviewer 4** if no stack-specific axes were selected.
-**Merge Reviewers 1+2** if the project has < 20 source files (small project).
+**Small project (< 20 files):** merge Reviewers 1+2 into a single agent, skip Reviewer 4.
+**Medium project (20-80 files):** skip Reviewer 4 unless stack-specific axes are critical.
+**Large project (> 80 files):** all 4 reviewers.
 
 Each agent receives:
 1. The audit map (their relevant files ONLY)
@@ -151,10 +165,22 @@ Use `date +%Y-%m-%d_%H-%M` to generate it. Never use date-only filenames — mul
 
 ```markdown
 # Audit Report — [project name]
-**Date:** [timestamp]
+**Date:** [full timestamp]
 **Stack:** [detected stack]
+**Project size:** [X source files]
 **Axes audited:** [list]
 **Agents used:** [count]
+**Duration:** [total time from start to report generation]
+
+## Delta from previous audit
+
+[If a previous report exists in audit-reports/:]
+- Previous audit: [date]
+- New findings: X (not in previous report)
+- Resolved since last audit: X (in previous report, no longer found)
+- Recurring: X (still present)
+
+[If no previous report:] "First audit — no comparison available."
 
 ## Summary
 
@@ -225,10 +251,12 @@ Also display a summary in the conversation:
 ```
 AUDIT COMPLETE — [project name]
 ═══════════════════════════════
+Duration: [Xm Xs]
 Findings: X critical, X high, X medium, X low
 Rejected: X false positives
 Tickets created: X BUG, X IMP
 Feature suggestions: X (for discussion)
+Delta: [X new / X resolved / X recurring] (or "first audit")
 
 Full report: audit-reports/[filename].md
 ```
@@ -248,3 +276,4 @@ If not, add it (audit reports contain security findings — never commit them).
 - **Always save the report** — findings must persist beyond the conversation
 - **Respect existing BACKLOG conventions** — scan IDs, use proper format
 - **Audit reports contain sensitive data** — ensure they're gitignored
+- **Scale agents to project size** — don't launch 4 agents on a 10-file project
