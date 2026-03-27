@@ -31,7 +31,7 @@ show_banner() {
 
 # ── Module definitions ────────────────────────────────────────────
 
-MODULES=("tab-titles" "handoff-kit" "supervisor" "command-guard" "critical-thinking" "pre-commit-gate" "backlog-kit" "claude-md-kit" "setup-project" "api-contract" "scope-enforcer" "post-tool-use" "audit")
+MODULES=("tab-titles" "handoff-kit" "supervisor" "command-guard" "critical-thinking" "pre-commit-gate" "backlog-kit" "claude-md-kit" "setup-project" "api-contract" "scope-enforcer" "post-tool-use" "audit" "factorize")
 DESCRIPTIONS=(
     "Smart terminal tab titles for Claude Code sessions"
     "Context monitoring, automatic backups, and session handoff"
@@ -46,6 +46,7 @@ DESCRIPTIONS=(
     "PreToolUse hook — block writes outside worker scope"
     "PostToolUse hook — manifest of modified files and test failure detection"
     "Deep code audit — security, tests, architecture, performance"
+    "Scan for duplication & factorization opportunities across the codebase"
 )
 DEPS=(
     "jq"
@@ -60,6 +61,7 @@ DEPS=(
     "jq"
     "jq"
     "jq"
+    "none"
     "none"
 )
 
@@ -126,6 +128,80 @@ install_cli() {
     touch "$SCRIPT_DIR/.installed"
 }
 
+install_shell_aliases() {
+    # Install base shell aliases in .zshrc (or .bashrc)
+    # These provide cc, ccd, ccupdate without requiring tab-titles
+    # If tab-titles is installed later, it replaces this block with an enhanced version
+
+    local ZSHRC="$HOME/.zshrc"
+    local BASHRC="$HOME/.bashrc"
+    local TARGET=""
+
+    if [ -f "$ZSHRC" ] || [ "$(basename "$SHELL")" = "zsh" ]; then
+        TARGET="$ZSHRC"
+    elif [ -f "$BASHRC" ]; then
+        TARGET="$BASHRC"
+    else
+        TARGET="$ZSHRC"
+    fi
+
+    local MARKER="# ── Claude Code Aliases"
+    local END_MARKER="# ── End Claude Code Aliases"
+
+    # If tab-titles block already exists, skip — it has the enhanced versions
+    if grep -q "# ── Claude Code Tab Titles" "$TARGET" 2>/dev/null; then
+        echo -e "  ${GREEN}✓${NC} Shell aliases already managed by tab-titles"
+        return 0
+    fi
+
+    # Remove existing base aliases block if present (idempotent update)
+    if grep -q "$MARKER" "$TARGET" 2>/dev/null; then
+        if [[ "$(uname)" == "Darwin" ]]; then
+            sed -i '' "/$MARKER/,/$END_MARKER/d" "$TARGET"
+        else
+            sed -i "/$MARKER/,/$END_MARKER/d" "$TARGET"
+        fi
+    fi
+
+    cat >> "$TARGET" << 'ALIASES'
+
+# ── Claude Code Aliases ─────────────────────────────────────────
+# Base aliases installed by claude-conf (https://github.com/Bidiche49/claude-conf)
+# Install tab-titles module for enhanced versions with smart terminal titles
+
+# cc : session normale
+cc() { command claude "$@"; }
+
+# ccd : mode dangerously-skip-permissions
+ccd() { command claude --dangerously-skip-permissions "$@"; }
+
+# ccupdate : mise a jour complete claude-conf (pull + reinstall all + reload)
+ccupdate() {
+    local conf_dir
+    conf_dir=$(cat "$HOME/.claude-conf-path" 2>/dev/null)
+    if [ -z "$conf_dir" ] || [ ! -d "$conf_dir/.git" ]; then
+        echo "claude-conf repo not found. Run install.sh first."
+        return 1
+    fi
+    echo "Pulling latest..."
+    git -C "$conf_dir" pull || return 1
+    echo "Reinstalling all modules..."
+    bash "$conf_dir/install.sh" --all
+    echo "Reloading shell..."
+    if [ -n "$ZSH_VERSION" ]; then
+        source ~/.zshrc
+    elif [ -n "$BASH_VERSION" ]; then
+        source ~/.bashrc
+    fi
+    echo "Done."
+}
+
+alias claude=cc
+# ── End Claude Code Aliases ─────────────────────────────────────
+ALIASES
+    echo -e "  ${GREEN}✓${NC} Shell aliases installed in $(basename "$TARGET") (cc, ccd, ccupdate)"
+}
+
 track_module() {
     local mod="$1"
     local file="$SCRIPT_DIR/.installed"
@@ -136,8 +212,9 @@ track_module() {
 
 show_banner
 
-# Always install the CLI first
+# Always install the CLI and base aliases first
 install_cli
+install_shell_aliases
 
 # Non-interactive mode: --all flag
 if [ "$1" = "--all" ]; then

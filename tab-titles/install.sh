@@ -124,6 +124,19 @@ MARKER="# ── Claude Code Tab Titles"
 
 END_MARKER="# ── End Claude Code Tab Titles"
 
+# Remove base aliases block if present (tab-titles replaces it with enhanced versions)
+BASE_MARKER="# ── Claude Code Aliases"
+BASE_END="# ── End Claude Code Aliases"
+if grep -q "$BASE_MARKER" "$ZSHRC" 2>/dev/null; then
+    if [[ "$(uname)" == "Darwin" ]]; then
+        sed -i '' "/$BASE_MARKER/,/$BASE_END/d" "$ZSHRC"
+    else
+        sed -i "/$BASE_MARKER/,/$BASE_END/d" "$ZSHRC"
+    fi
+    echo -e "${GREEN}✓${NC} Base aliases block replaced by tab-titles enhanced version"
+fi
+
+# Remove existing tab-titles block if present (idempotent update)
 if grep -q "$MARKER" "$ZSHRC" 2>/dev/null; then
     echo -e "${YELLOW}!${NC} Updating existing tab-titles block in .zshrc..."
     if [[ "$(uname)" == "Darwin" ]]; then
@@ -234,8 +247,8 @@ ccw() {
     command claude "$@"
 }
 
-# ccup : mise a jour complete claude-conf (pull + reinstall + reload)
-ccup() {
+# ccupdate / ccup : mise a jour complete claude-conf (pull + reinstall + reload)
+ccupdate() {
     local conf_dir
     conf_dir=$(cat "$HOME/.claude-conf-path" 2>/dev/null)
     if [ -z "$conf_dir" ] || [ ! -d "$conf_dir/.git" ]; then
@@ -247,9 +260,14 @@ ccup() {
     echo "Reinstalling all modules..."
     bash "$conf_dir/install.sh" --all
     echo "Reloading shell..."
-    source ~/.zshrc
+    if [ -n "$ZSH_VERSION" ]; then
+        source ~/.zshrc
+    elif [ -n "$BASH_VERSION" ]; then
+        source ~/.bashrc
+    fi
     echo "Done."
 }
+alias ccup=ccupdate
 
 # 'claude' → 'cc' (tab titles always active)
 alias claude=cc
