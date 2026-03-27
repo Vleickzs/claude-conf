@@ -24,7 +24,15 @@ $ARGUMENTS
    - Complexite (XS / S / M / L / XL)
    - Tags (free-form, relevant to the bug)
 
-4. **Create** `BACKLOG/BUGS/PENDING/BUG-XXX.md` using this format:
+4. **Check for external documentation needs**: If the bug involves a third-party library, API, or service (e.g. Stripe, Firebase, AWS SDK), note in the ticket that the relevant documentation should be consulted before starting the fix. Add a line in the description: `📖 Consulter: [doc URL or doc name]`.
+
+5. **Identify affected files**: Based on the description and your knowledge of the codebase, determine which files are involved. If you can identify them, list the actual paths. If unsure, list the most likely candidates with a `(?)` marker. NEVER leave `(A determiner)` — always make your best assessment.
+
+6. **Write specific acceptance criteria**: Describe the expected behavior AFTER the fix. Not "le bug est corrige" — describe what should happen concretely. Example: "La commande `install.sh` ne crash plus quand le dossier cible n'existe pas" instead of "Le bug est corrige".
+
+7. **Write actionable test steps**: List the exact commands to run or manual steps to reproduce/verify. Reference the project's existing test commands when relevant (`bash tests/test.sh`, `bun test`, etc.).
+
+8. **Create** `BACKLOG/BUGS/PENDING/BUG-XXX.md` using this format:
 
    ```markdown
    # BUG-XXX: [Short title derived from description]
@@ -41,22 +49,22 @@ $ARGUMENTS
    ---
 
    ## Description
-   [User's description, enriched if needed]
+   [User's description, enriched with root cause analysis if possible]
 
    ## Fichiers concernes
-   - (A determiner)
+   - `path/to/file.ext` — [why this file is involved]
 
    ## Criteres d'acceptation
-   - [ ] Le bug est corrige
+   - [ ] [Specific expected behavior after fix]
    - [ ] Aucune regression introduite
 
    ## Tests de validation
-   - [ ] [Specific tests for this bug]
+   - [ ] [Exact command or manual verification step]
    ```
 
-5. **Regenerate INDEX.md** — run the full `/backlog-status` logic (scan all tickets, rewrite INDEX.md entirely, display stats).
+9. **Regenerate INDEX.md** — run the full `/backlog-status` logic (scan all tickets, rewrite INDEX.md entirely, display stats).
 
-6. **Confirm** with the ticket ID and path.
+10. **Confirm** with the ticket ID and path.
 
 ## Important
 

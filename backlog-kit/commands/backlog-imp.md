@@ -24,7 +24,15 @@ $ARGUMENTS
    - Complexite (XS / S / M / L / XL)
    - Tags (free-form, relevant to the improvement)
 
-4. **Create** `BACKLOG/IMPROVEMENTS/PENDING/IMP-XXX.md` using this format:
+4. **Check for external documentation needs**: If the improvement involves a third-party library, API, or service (e.g. migrating to a new SDK version, adopting a framework pattern), note in the ticket that the relevant documentation should be consulted before starting. Add a line in the description: `📖 Consulter: [doc URL or doc name]`.
+
+5. **Identify affected files**: Based on the description and your knowledge of the codebase, determine which files will be modified. List actual paths. For uncertain candidates, add `(?)`. NEVER leave `(A determiner)`.
+
+6. **Write specific acceptance criteria**: Describe the measurable improvement — what changes concretely? Performance gain, reduced complexity, better DX? Each criterion must be verifiable. Example: "Le hook s'execute en < 100ms au lieu de 500ms" instead of "C'est plus rapide".
+
+7. **Write actionable test steps**: List the exact commands or scenarios to validate the improvement. Reference existing test infrastructure when applicable.
+
+8. **Create** `BACKLOG/IMPROVEMENTS/PENDING/IMP-XXX.md` using this format:
 
    ```markdown
    # IMP-XXX: [Short title derived from description]
@@ -41,21 +49,21 @@ $ARGUMENTS
    ---
 
    ## Description
-   [User's description, enriched if needed]
+   [User's description, enriched with current state vs desired state]
 
    ## Fichiers concernes
-   - (A determiner)
+   - `path/to/file.ext` — [what changes in this file]
 
    ## Criteres d'acceptation
-   - [ ] [Specific criteria]
+   - [ ] [Specific measurable improvement]
 
    ## Tests de validation
-   - [ ] [Specific tests]
+   - [ ] [Exact command or verification scenario]
    ```
 
-5. **Regenerate INDEX.md** — run the full `/backlog-status` logic (scan all tickets, rewrite INDEX.md entirely, display stats).
+9. **Regenerate INDEX.md** — run the full `/backlog-status` logic (scan all tickets, rewrite INDEX.md entirely, display stats).
 
-6. **Confirm** with the ticket ID and path.
+10. **Confirm** with the ticket ID and path.
 
 ## Important
 

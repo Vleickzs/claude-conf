@@ -1,6 +1,6 @@
 ---
 description: Deep code audit — security, tests, architecture, performance, stack-specific checks
-argument-hint: [--changed | --since <commit/date> | security | tests | architecture | performance | ux | costs | <custom>]
+argument-hint: [--dry-run | --changed | --since <commit/date> | security | tests | architecture | performance | ux | costs | <custom>]
 ---
 
 Run a structured code audit on this project. Adapts to the detected stack.
@@ -11,6 +11,8 @@ Run a structured code audit on this project. Adapts to the detected stack.
 - `/audit --changed` — incremental: only files changed since the last audit report
 - `/audit --since abc123` — incremental: only files changed since the given commit or date
 - `/audit --changed security` — incremental + single axis
+- `/audit --dry-run` — full audit, report only, no tickets created
+- `/audit --dry-run security` — single axis, no tickets
 
 ## Step 1 — Context & scope
 
@@ -48,7 +50,7 @@ Based on the stack and project structure, select which axes to audit.
 **Always included (any stack):**
 - **Tests** — coverage gaps, weak assertions, missing edge cases, fragile tests
 - **Security** — secrets in code, injection risks, input validation, dependency vulnerabilities
-- **Architecture** — layering violations, DRY, coupling, pattern consistency
+- **Architecture** — layering violations, DRY, coupling, pattern consistency. If significant duplication is detected, note it in the report and recommend running `/factorize` for a deep analysis.
 - **Error handling** — silent failures, broad exceptions, unhelpful error messages
 
 **Include if detected:**
@@ -165,6 +167,8 @@ After all agents return, act as CTO. For each finding:
 
 ## Step 6 — Create tickets
 
+**If `--dry-run` is set → skip this step entirely.** The report is still generated (Step 7) but no tickets are created. The report will show "—" in the Ticket column instead of ticket IDs.
+
 For each confirmed finding:
 
 | Category | Ticket type | Auto-create? |
@@ -280,7 +284,7 @@ Mode: [full / incremental (X changed files)]
 Duration: [Xm Xs]
 Findings: X critical, X high, X medium, X low
 Rejected: X false positives
-Tickets created: X BUG, X IMP
+Tickets: [X BUG, X IMP created | dry-run — no tickets created]
 Feature suggestions: X (for discussion)
 Delta: [X new / X resolved / X recurring] (or "first audit")
 

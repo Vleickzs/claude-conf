@@ -24,7 +24,15 @@ $ARGUMENTS
    - Complexite (XS / S / M / L / XL)
    - Tags (free-form, relevant to the feature)
 
-4. **Create** `BACKLOG/FEATURES/PENDING/FEAT-XXX.md` using this format:
+4. **Check for external documentation needs**: If the feature involves a third-party library, API, or service (e.g. Stripe, Firebase, AWS SDK, a specific framework), note in the ticket that the relevant documentation should be consulted before starting implementation. Add a line in the description: `📖 Consulter: [doc URL or doc name]`.
+
+5. **Identify affected files**: Based on the description and your knowledge of the codebase, determine which files will need to be created or modified. List actual paths. For new files, indicate `(new)`. For uncertain candidates, add `(?)`. NEVER leave `(A determiner)`.
+
+6. **Write specific acceptance criteria**: Describe the observable behavior the feature must produce. Each criterion should be independently verifiable. Example: "La commande `/foo` cree un fichier dans `~/.claude/commands/`" instead of "La feature marche".
+
+7. **Write actionable test steps**: List the exact commands or scenarios to validate the feature works. Reference existing test infrastructure when applicable.
+
+8. **Create** `BACKLOG/FEATURES/PENDING/FEAT-XXX.md` using this format:
 
    ```markdown
    # FEAT-XXX: [Short title derived from description]
@@ -41,21 +49,21 @@ $ARGUMENTS
    ---
 
    ## Description
-   [User's description, enriched if needed]
+   [User's description, enriched with context and design considerations]
 
    ## Fichiers concernes
-   - (A determiner)
+   - `path/to/file.ext` — [create/modify, why]
 
    ## Criteres d'acceptation
-   - [ ] [Specific criteria]
+   - [ ] [Specific observable behavior]
 
    ## Tests de validation
-   - [ ] [Specific tests]
+   - [ ] [Exact command or verification scenario]
    ```
 
-5. **Regenerate INDEX.md** — run the full `/backlog-status` logic (scan all tickets, rewrite INDEX.md entirely, display stats).
+9. **Regenerate INDEX.md** — run the full `/backlog-status` logic (scan all tickets, rewrite INDEX.md entirely, display stats).
 
-6. **Confirm** with the ticket ID and path.
+10. **Confirm** with the ticket ID and path.
 
 ## Important
 
