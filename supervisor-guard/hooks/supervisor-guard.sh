@@ -33,9 +33,12 @@ esac
 SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // empty' 2>/dev/null)
 [ -z "$SESSION_ID" ] && exit 0
 
-# Check supervisor marker — no marker = pass-through (normal mode)
+# Check supervisor marker — primary mechanism (set by supervisor-detect.sh hook)
 MARKER=".claude-sessions/supervisor-active/${SESSION_ID}"
-[ -f "$MARKER" ] || exit 0
+# Fallback: env var from launch script
+if [ ! -f "$MARKER" ]; then
+    [ "${CC_SUPERVISOR_SESSION:-}" = "1" ] || exit 0
+fi
 
 # Extract target file path from tool_input
 FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
