@@ -78,7 +78,7 @@ echo ""
 
 mkdir -p "$(dirname "$SETTINGS_FILE")"
 
-# Hook entries — PreToolUse matchers for Write and Edit
+# Hook entries — PreToolUse matchers for Write, Edit, and Bash
 HOOK_ENTRY_WRITE=$(cat <<JSONEOF
 {
   "matcher": "Write",
@@ -95,6 +95,19 @@ JSONEOF
 HOOK_ENTRY_EDIT=$(cat <<JSONEOF
 {
   "matcher": "Edit",
+  "hooks": [
+    {
+      "type": "command",
+      "command": "$GUARD_HOOK"
+    }
+  ]
+}
+JSONEOF
+)
+
+HOOK_ENTRY_BASH=$(cat <<JSONEOF
+{
+  "matcher": "Bash",
   "hooks": [
     {
       "type": "command",
@@ -125,7 +138,7 @@ else
     CURRENT='{}'
 fi
 
-# ── Register PreToolUse hooks (Write + Edit) ────────────────────
+# ── Register PreToolUse hooks (Write + Edit + Bash) ─────────────
 
 HAS_PRE_TOOL_USE=$(echo "$CURRENT" | jq 'has("hooks") and (.hooks | has("PreToolUse"))' 2>/dev/null)
 
@@ -135,21 +148,36 @@ if [ "$HAS_PRE_TOOL_USE" = "true" ]; then
     ' 2>/dev/null)
 
     if [ "$GUARD_INSTALLED" = "true" ]; then
-        echo -e "  ${YELLOW}SKIP${NC} PreToolUse hooks already configured"
+        # Check if Bash matcher is missing (upgrade from pre-IMP-029)
+        BASH_MATCHER=$(echo "$CURRENT" | jq --arg cmd "$GUARD_HOOK" '
+            [.hooks.PreToolUse[]? | select(.matcher == "Bash" and (.hooks[]?.command == $cmd))] | length > 0
+        ' 2>/dev/null)
+
+        if [ "$BASH_MATCHER" = "true" ]; then
+            echo -e "  ${YELLOW}SKIP${NC} PreToolUse hooks already configured"
+        else
+            CURRENT=$(echo "$CURRENT" | jq \
+                --argjson bash_entry "$HOOK_ENTRY_BASH" '
+                .hooks.PreToolUse += [$bash_entry]
+            ')
+            echo -e "  ${GREEN}OK${NC} PreToolUse Bash matcher added (upgrade)"
+        fi
     else
         CURRENT=$(echo "$CURRENT" | jq \
             --argjson write "$HOOK_ENTRY_WRITE" \
-            --argjson edit "$HOOK_ENTRY_EDIT" '
-            .hooks.PreToolUse += [$write, $edit]
+            --argjson edit "$HOOK_ENTRY_EDIT" \
+            --argjson bash_entry "$HOOK_ENTRY_BASH" '
+            .hooks.PreToolUse += [$write, $edit, $bash_entry]
         ')
-        echo -e "  ${GREEN}OK${NC} PreToolUse hooks added (Write + Edit matchers)"
+        echo -e "  ${GREEN}OK${NC} PreToolUse hooks added (Write + Edit + Bash matchers)"
     fi
 else
     CURRENT=$(echo "$CURRENT" | jq \
         --argjson write "$HOOK_ENTRY_WRITE" \
-        --argjson edit "$HOOK_ENTRY_EDIT" '
+        --argjson edit "$HOOK_ENTRY_EDIT" \
+        --argjson bash_entry "$HOOK_ENTRY_BASH" '
         .hooks = (.hooks // {}) |
-        .hooks.PreToolUse = [$write, $edit]
+        .hooks.PreToolUse = [$write, $edit, $bash_entry]
     ')
     echo -e "  ${GREEN}OK${NC} PreToolUse hook section created"
 fi
@@ -198,7 +226,7 @@ echo -e "  ${BOLD}Marker dir:${NC}    ${DIM}.claude-sessions/supervisor-active/$
 echo ""
 echo -e "  ${BOLD}What happens now:${NC}"
 echo -e "  ${DIM}When /supervisor is detected, the detect hook creates the marker.${NC}"
-echo -e "  ${DIM}The guard hook blocks Write/Edit on files outside the whitelist.${NC}"
+echo -e "  ${DIM}The guard hook blocks Write/Edit/Bash-write on files outside the whitelist.${NC}"
 echo -e "  ${DIM}Without a marker (or CC_SUPERVISOR_SESSION=1), the guard is transparent.${NC}"
 echo ""
 echo -e "  ${BOLD}Whitelist:${NC}"
