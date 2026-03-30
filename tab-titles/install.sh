@@ -214,6 +214,21 @@ ccs() {
     command claude "$@"
 }
 
+# ccb : mode closing/biz (freelance mission analysis)
+ccb() {
+    _cc_check_updates
+    _cc_update_prompt
+    if _cc_disabled; then command claude "$@"; return; fi
+    local p=$(basename "$PWD")
+    local d=$(_cc_dot "$p")
+    _cc_set_win "${d} ${p}"
+    _cc_set_tab "⚪ BIZ"
+    export CC_TAB_TITLE="⚪ BIZ"
+    export CC_WIN_TITLE="${d} ${p}"
+    export CLAUDE_CODE_DISABLE_TERMINAL_TITLE=1
+    command claude "$@"
+}
+
 # ccd : mode dangerously-skip-permissions
 ccd() {
     _cc_check_updates
@@ -321,6 +336,7 @@ echo ""
 echo "Commandes disponibles :"
 echo "  cc           Session Claude Code normale"
 echo "  ccs          Mode supervisor"
+echo "  ccb          Mode closing (freelance missions)"
 echo "  ccd          Mode skip-permissions"
 echo "  ccw BUG-101  Mode worker sur un ticket"
 echo ""

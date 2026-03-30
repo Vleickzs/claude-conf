@@ -359,6 +359,9 @@ cmd_sync() {
             supervisor)
                 _sync_file "$mod" "commands/supervisor.md" "$HOME/.claude/commands/supervisor.md"
                 ;;
+            closing)
+                _sync_file "$mod" "commands/closing.md" "$HOME/.claude/commands/closing.md"
+                ;;
             audit)
                 _sync_file "$mod" "commands/audit.md" "$HOME/.claude/commands/audit.md"
                 ;;

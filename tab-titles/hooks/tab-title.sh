@@ -8,6 +8,7 @@
 grep -q "^tab-titles$" "$HOME/.claude-conf-disabled" 2>/dev/null && exit 0
 # Titres:
 #   🔴 SUP · projet       (mode supervisor)
+#   ⚪ BIZ · projet       (mode closing/freelance)
 #   🟢 BUG-101 · projet   (worker sur un ticket)
 #   ⚡ CC · projet         (session normale)
 
@@ -39,6 +40,8 @@ CURRENT_STATE=$(cat "$STATE_FILE" 2>/dev/null || echo "CC")
 
 if echo "$PROMPT" | head -1 | grep -qiE '^[[:space:]]*/supervisor'; then
     echo "SUP" > "$STATE_FILE"
+elif echo "$PROMPT" | head -1 | grep -qiE '^[[:space:]]*/closing'; then
+    echo "BIZ" > "$STATE_FILE"
 elif [ -n "$PROMPT" ]; then
     # Detect worker prompt markers
     IS_WORKER_PROMPT=false
@@ -47,8 +50,8 @@ elif [ -n "$PROMPT" ]; then
     # Ticket in first 3 lines = user intent (typed or worker prompt header)
     TICKET_MATCH=$(echo "$PROMPT" | head -3 | grep -oE '(BUG|FEAT|IMP)-[0-9]+' | head -1)
 
-    if [ "$CURRENT_STATE" = "SUP" ]; then
-        # SUP is sticky — only a real worker prompt can override it
+    if [ "$CURRENT_STATE" = "SUP" ] || [ "$CURRENT_STATE" = "BIZ" ]; then
+        # SUP and BIZ are sticky — only a real worker prompt can override them
         if [ "$IS_WORKER_PROMPT" = true ] && [ -n "$TICKET_MATCH" ]; then
             echo "WORK:${TICKET_MATCH}" > "$STATE_FILE"
         elif [ "$IS_WORKER_PROMPT" = true ]; then
@@ -80,6 +83,9 @@ STATE=$(cat "$STATE_FILE" 2>/dev/null || echo "CC")
 case "$STATE" in
     SUP)
         TAB_TITLE="🔴 SUP"
+        ;;
+    BIZ)
+        TAB_TITLE="⚪ BIZ"
         ;;
     WORK:*:*)
         TICKET=$(echo "$STATE" | cut -d: -f2)
